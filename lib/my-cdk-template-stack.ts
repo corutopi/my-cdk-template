@@ -1,16 +1,12 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import { NetworkStack } from './stack/network-stack';
 
 export class MyCdkTemplateStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
-
-    // The code that defines your stack goes here
-
-    // example resource
-    // const queue = new sqs.Queue(this, 'MyCdkTemplateQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
-  }
+    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+        super(scope, id, props);
+        const networkStack = new NetworkStack(scope, 'NetWorkStack', {
+            stackName: 'network-stack',
+        });
+    }
 }
