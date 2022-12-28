@@ -10,7 +10,7 @@ Object {
     },
   },
   "Resources": Object {
-    "VPC": Object {
+    "VpcMain": Object {
       "Properties": Object {
         "CidrBlock": "10.10.0.0/16",
         "Tags": Array [

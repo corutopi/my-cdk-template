@@ -1,4 +1,3 @@
-import { Construct } from 'constructs';
 import { CfnVPC } from 'aws-cdk-lib/aws-ec2';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
@@ -11,7 +10,7 @@ export class Vpc extends BaseResource {
   constructor(parentProps: BaseProps) {
     super(parentProps);
 
-    this.main = new CfnVPC(this.scope, 'VPC', {
+    this.main = new CfnVPC(this.scope, this.createLogicalId('main'), {
       cidrBlock: '10.10.0.0/16',
       tags: [this.createNameTagProps('main')],
     });

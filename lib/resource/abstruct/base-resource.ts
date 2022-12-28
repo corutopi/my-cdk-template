@@ -25,4 +25,22 @@ export abstract class BaseResource {
   protected createResourceName(originName: string): string {
     return `${constant.SYSTEM_NAME}-${originName}-${this.SERVICE_NAME}`;
   }
+
+  protected createLogicalId(originName: string): string {
+    return this.convertUpperCamelCase(`${this.SERVICE_NAME}-${originName}`);
+  }
+
+  protected convertUpperCamelCase(target: string): string {
+    let re: string = '';
+    let upFlg: boolean = true;
+    for (let i = 0; i < target.length; i++) {
+      if (target[i] === '-' || target[i] === '_') {
+        upFlg = true;
+        continue;
+      }
+      re += upFlg ? target[i].toUpperCase() : target[i];
+      upFlg = false;
+    }
+    return re;
+  }
 }
