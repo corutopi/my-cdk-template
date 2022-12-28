@@ -16,7 +16,7 @@ Object {
         "Tags": Array [
           Object {
             "Key": "Name",
-            "Value": "main-vpc",
+            "Value": "cdktest-main-vpc",
           },
         ],
       },

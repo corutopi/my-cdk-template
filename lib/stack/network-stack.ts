@@ -9,6 +9,6 @@ export class NetworkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    this.vpc = new Vpc({ scope: this }, { cidrBlock: '10.10.0.0/16' });
+    this.vpc = new Vpc({ scope: this });
   }
 }
