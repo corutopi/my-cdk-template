@@ -1,19 +1,23 @@
 import { Construct } from 'constructs';
 import { CfnVPC } from 'aws-cdk-lib/aws-ec2';
 
-import { BaseResource } from '../abstruct/base-resource';
+import { BaseResource, BaseProps } from '../abstruct/base-resource';
+
+interface VpcProps {
+  cidrBlock: string;
+}
 
 export class Vpc extends BaseResource {
-    readonly SERVICE_NAME: string = 'vpc';
+  public readonly SERVICE_NAME: string = 'vpc';
 
-    readonly main: CfnVPC;
+  public readonly main: CfnVPC;
 
-    constructor(scope: Construct, cidrBlock: string) {
-        super();
+  constructor(parentProps: BaseProps, vpcProps: VpcProps) {
+    super(parentProps);
 
-        this.main = new CfnVPC(scope, 'VPC', {
-            cidrBlock: cidrBlock,
-            tags: [this.createNameTagProps('main')],
-        });
-    }
+    this.main = new CfnVPC(this.scope, 'VPC', {
+      cidrBlock: vpcProps.cidrBlock,
+      tags: [this.createNameTagProps('main')],
+    });
+  }
 }
