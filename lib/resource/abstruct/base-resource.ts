@@ -1,6 +1,8 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
+import * as constant from '../../constant';
+
 export interface BaseProps {
   readonly scope: Construct;
 }
@@ -21,6 +23,6 @@ export abstract class BaseResource {
   }
 
   protected createResourceName(originName: string): string {
-    return `${originName}-${this.SERVICE_NAME}`;
+    return `${constant.SYSTEM_NAME}-${originName}-${this.SERVICE_NAME}`;
   }
 }
