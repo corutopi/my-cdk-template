@@ -10,6 +10,66 @@ Object {
     },
   },
   "Resources": Object {
+    "SubnetPrivateA": Object {
+      "Properties": Object {
+        "CidrBlock": "10.10.11.0/24",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "cdktest-private-a-subnet",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "VpcMain",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "SubnetPrivateC": Object {
+      "Properties": Object {
+        "CidrBlock": "10.10.12.0/24",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "cdktest-private-c-subnet",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "VpcMain",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "SubnetPublicA": Object {
+      "Properties": Object {
+        "CidrBlock": "10.10.1.0/24",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "cdktest-public-a-subnet",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "VpcMain",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "SubnetPublicC": Object {
+      "Properties": Object {
+        "CidrBlock": "10.10.2.0/24",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "cdktest-public-c-subnet",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "VpcMain",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
     "VpcMain": Object {
       "Properties": Object {
         "CidrBlock": "10.10.0.0/16",
