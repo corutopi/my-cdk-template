@@ -50,3 +50,19 @@ test('Subnet', () => {
     Tags: [{ Key: 'Name', Value: 'cdktest-private-c-subnet' }],
   });
 });
+
+test('InternetGateway', () => {
+  const app = new cdk.App();
+  const stack = new NetworkStack(app, 'TestStack');
+  const template = Template.fromStack(stack);
+
+  template.resourceCountIs('AWS::EC2::InternetGateway', 1);
+  template.hasResourceProperties('AWS::EC2::InternetGateway', {
+    Tags: [{ Key: 'Name', Value: 'cdktest-main-internet-gateway' }],
+  });
+  template.resourceCountIs('AWS::EC2::VPCGatewayAttachment', 1);
+  template.hasResourceProperties('AWS::EC2::VPCGatewayAttachment', {
+    VpcId: { Ref: 'VpcMain' },
+    InternetGatewayId: { Ref: 'InternetGatewayMain' },
+  });
+});

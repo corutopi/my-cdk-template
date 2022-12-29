@@ -10,6 +10,28 @@ Object {
     },
   },
   "Resources": Object {
+    "InternetGatewayMain": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "cdktest-main-internet-gateway",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::InternetGateway",
+    },
+    "InternetGatewayMainAttachment": Object {
+      "Properties": Object {
+        "InternetGatewayId": Object {
+          "Ref": "InternetGatewayMain",
+        },
+        "VpcId": Object {
+          "Ref": "VpcMain",
+        },
+      },
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+    },
     "SubnetPrivateA": Object {
       "Properties": Object {
         "CidrBlock": "10.10.11.0/24",
