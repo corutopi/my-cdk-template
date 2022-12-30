@@ -3,10 +3,16 @@ import { CfnInternetGateway, CfnVPCGatewayAttachment } from 'aws-cdk-lib/aws-ec2
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
 import { Vpc } from './vpc';
 
+/**
+ * InternetGateway クラスの引数用インターフェース.
+ */
 interface InternetGatewayProps {
   readonly vpc: Vpc;
 }
 
+/**
+ * InternetGateway を生成するリソースクラス
+ */
 export class InternetGateway extends BaseResource {
   public readonly SERVICE_NAME: string = 'internet-gateway';
 

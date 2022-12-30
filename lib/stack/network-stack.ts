@@ -5,6 +5,9 @@ import { Vpc } from '../resource/network/vpc';
 import { Subnet } from '../resource/network/subnet';
 import { InternetGateway } from '../resource/network/internet-gateway';
 
+/**
+ * NetworkStack を作成するクラス.
+ */
 export class NetworkStack extends cdk.Stack {
   public readonly vpc: Vpc;
   public readonly subnet: Subnet;

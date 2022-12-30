@@ -3,16 +3,35 @@ import { CfnSubnet } from 'aws-cdk-lib/aws-ec2';
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
 import { Vpc } from './vpc';
 
+/**
+ * Subnet クラスの引数用インターフェース.
+ */
 interface SubnetProps {
   vpc: Vpc;
 }
 
+/**
+ * Subnet 生成に必要な情報を持つインターフェース
+ */
 interface ResourceInfo {
   originName: string;
   cidrBlock: string;
+  /**
+   * メンバ変数に生成したCfnSubnetインスタンスを代入する処理を実装する.
+   *
+   * @example
+   * assign: (s, subnet) => ((s.publicA as CfnSubnet) = subnet)
+   *
+   * @privateRemarks
+   * 第1引数にSubnetクラス自身を設定するのはアロー関数内でthisを使用する場合の不振挙動を抑制するため.
+   * メンバ変数がreadonlyの場合代入時にキャストする必要あり(※ほんとはあまりよろしくない).
+   */
   assign: (s: Subnet, subnet: CfnSubnet) => void;
 }
 
+/**
+ * Subnet を生成するリソースクラス
+ */
 export class Subnet extends BaseResource {
   public readonly SERVICE_NAME: string = 'subnet';
 
@@ -55,6 +74,12 @@ export class Subnet extends BaseResource {
     }
   }
 
+  /**
+   * subnet を生成する.
+   *
+   * @param resourceInfo - 生成するsubnetの情報を持ったインターフェース
+   * @returns 生成したsubnetインスタンス
+   */
   private createSubnet(resourceInfo: ResourceInfo): CfnSubnet {
     return new CfnSubnet(this.scope, this.createLogicalId(resourceInfo.originName), {
       vpcId: this.vpc.main.ref,

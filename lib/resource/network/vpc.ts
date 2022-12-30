@@ -2,6 +2,9 @@ import { CfnVPC } from 'aws-cdk-lib/aws-ec2';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
 
+/**
+ * vpc を生成するリソースクラス
+ */
 export class Vpc extends BaseResource {
   public readonly SERVICE_NAME: string = 'vpc';
 
