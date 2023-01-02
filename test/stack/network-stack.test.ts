@@ -2,19 +2,27 @@ import * as cdk from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 import { NetworkStack } from '../../lib/stack/network-stack';
 
-test('Snapshot', () => {
+/**
+ * テストで使用するテンプレートを生成する.
+ *
+ * @returns 生成した Template インスタンス
+ */
+function createTestTemplate(): Template {
   const app = new cdk.App();
   const stack = new NetworkStack(app, 'TestStack');
   const template = Template.fromStack(stack);
+  return template;
+}
+
+test('Snapshot', () => {
+  const template = createTestTemplate();
   const json = template.toJSON();
 
   expect(json).toMatchSnapshot('NetworkStackSnapshot');
 });
 
 test('Vpc', () => {
-  const app = new cdk.App();
-  const stack = new NetworkStack(app, 'TestStack');
-  const template = Template.fromStack(stack);
+  const template = createTestTemplate();
 
   template.resourceCountIs('AWS::EC2::VPC', 1);
   template.hasResourceProperties('AWS::EC2::VPC', {
@@ -24,9 +32,7 @@ test('Vpc', () => {
 });
 
 test('Subnet', () => {
-  const app = new cdk.App();
-  const stack = new NetworkStack(app, 'TestStack');
-  const template = Template.fromStack(stack);
+  const template = createTestTemplate();
 
   template.resourceCountIs('AWS::EC2::Subnet', 4);
   template.hasResourceProperties('AWS::EC2::Subnet', {
@@ -52,9 +58,7 @@ test('Subnet', () => {
 });
 
 test('InternetGateway', () => {
-  const app = new cdk.App();
-  const stack = new NetworkStack(app, 'TestStack');
-  const template = Template.fromStack(stack);
+  const template = createTestTemplate();
 
   template.resourceCountIs('AWS::EC2::InternetGateway', 1);
   template.hasResourceProperties('AWS::EC2::InternetGateway', {
