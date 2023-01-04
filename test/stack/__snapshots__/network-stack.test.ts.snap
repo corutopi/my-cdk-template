@@ -32,6 +32,90 @@ Object {
       },
       "Type": "AWS::EC2::VPCGatewayAttachment",
     },
+    "RouteTablePrivateCommon": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "cdktest-private-common-route-table",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "VpcMain",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "RouteTablePublicCommon": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "cdktest-public-common-route-table",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "VpcMain",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "RouteTablePublicRouteCommon": Object {
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": Object {
+          "Ref": "InternetGatewayMain",
+        },
+        "RouteTableId": Object {
+          "Ref": "RouteTablePublicCommon",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "RouteTableSubnetAssociationPrivateA": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "RouteTablePrivateCommon",
+        },
+        "SubnetId": Object {
+          "Ref": "SubnetPrivateA",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "RouteTableSubnetAssociationPrivateC": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "RouteTablePrivateCommon",
+        },
+        "SubnetId": Object {
+          "Ref": "SubnetPrivateC",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "RouteTableSubnetAssociationPublicA": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "RouteTablePublicCommon",
+        },
+        "SubnetId": Object {
+          "Ref": "SubnetPublicA",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "RouteTableSubnetAssociationPublicC": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "RouteTablePublicCommon",
+        },
+        "SubnetId": Object {
+          "Ref": "SubnetPublicC",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
     "SubnetPrivateA": Object {
       "Properties": Object {
         "CidrBlock": "10.10.11.0/24",

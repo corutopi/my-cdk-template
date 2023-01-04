@@ -70,3 +70,42 @@ test('InternetGateway', () => {
     InternetGatewayId: { Ref: 'InternetGatewayMain' },
   });
 });
+
+test('RouteTable', () => {
+  const template = createTestTemplate();
+
+  template.resourceCountIs('AWS::EC2::RouteTable', 2);
+  template.hasResourceProperties('AWS::EC2::RouteTable', {
+    VpcId: { Ref: 'VpcMain' },
+    Tags: [{ Key: 'Name', Value: 'cdktest-public-common-route-table' }],
+  });
+  template.hasResourceProperties('AWS::EC2::RouteTable', {
+    VpcId: { Ref: 'VpcMain' },
+    Tags: [{ Key: 'Name', Value: 'cdktest-private-common-route-table' }],
+  });
+
+  template.resourceCountIs('AWS::EC2::Route', 1);
+  template.hasResourceProperties('AWS::EC2::Route', {
+    RouteTableId: { Ref: 'RouteTablePublicCommon' },
+    DestinationCidrBlock: '0.0.0.0/0',
+    GatewayId: { Ref: 'InternetGatewayMain' },
+  });
+
+  template.resourceCountIs('AWS::EC2::SubnetRouteTableAssociation', 4);
+  template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
+    RouteTableId: { Ref: 'RouteTablePublicCommon' },
+    SubnetId: { Ref: 'SubnetPublicA' },
+  });
+  template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
+    RouteTableId: { Ref: 'RouteTablePublicCommon' },
+    SubnetId: { Ref: 'SubnetPublicC' },
+  });
+  template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
+    RouteTableId: { Ref: 'RouteTablePrivateCommon' },
+    SubnetId: { Ref: 'SubnetPrivateA' },
+  });
+  template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
+    RouteTableId: { Ref: 'RouteTablePrivateCommon' },
+    SubnetId: { Ref: 'SubnetPrivateC' },
+  });
+});
