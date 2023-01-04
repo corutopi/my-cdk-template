@@ -33,7 +33,8 @@ interface ResourceInfo {
  * Subnet を生成するリソースクラス
  */
 export class Subnet extends BaseResource {
-  public readonly SERVICE_NAME: string = 'subnet';
+  public readonly SERVICE_FULL_NAME: string = 'subnet';
+  public readonly SERVICE_SHORT_NAME: string = 'subnet';
 
   public readonly publicA: CfnSubnet;
   public readonly publicC: CfnSubnet;

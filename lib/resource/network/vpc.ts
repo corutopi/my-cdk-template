@@ -6,7 +6,8 @@ import { BaseResource, BaseProps } from '../abstruct/base-resource';
  * vpc を生成するリソースクラス
  */
 export class Vpc extends BaseResource {
-  public readonly SERVICE_NAME: string = 'vpc';
+  public readonly SERVICE_FULL_NAME: string = 'vpc';
+  public readonly SERVICE_SHORT_NAME: string = 'vpc';
 
   public readonly main: CfnVPC;
 

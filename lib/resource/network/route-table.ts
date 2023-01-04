@@ -55,7 +55,8 @@ interface ResourceInfo {
  * Subnet を生成するリソースクラス
  */
 export class RouteTable extends BaseResource {
-  public readonly SERVICE_NAME: string = 'route-table';
+  public readonly SERVICE_FULL_NAME: string = 'route-table';
+  public readonly SERVICE_SHORT_NAME: string = 'rt';
 
   public readonly publicCommon: CfnRouteTable;
   public readonly privateCommon: CfnRouteTable;

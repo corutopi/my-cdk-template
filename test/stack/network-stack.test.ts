@@ -62,7 +62,7 @@ test('InternetGateway', () => {
 
   template.resourceCountIs('AWS::EC2::InternetGateway', 1);
   template.hasResourceProperties('AWS::EC2::InternetGateway', {
-    Tags: [{ Key: 'Name', Value: 'cdktest-main-internet-gateway' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-main-igw' }],
   });
   template.resourceCountIs('AWS::EC2::VPCGatewayAttachment', 1);
   template.hasResourceProperties('AWS::EC2::VPCGatewayAttachment', {
@@ -77,11 +77,11 @@ test('RouteTable', () => {
   template.resourceCountIs('AWS::EC2::RouteTable', 2);
   template.hasResourceProperties('AWS::EC2::RouteTable', {
     VpcId: { Ref: 'VpcMain' },
-    Tags: [{ Key: 'Name', Value: 'cdktest-public-common-route-table' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-public-common-rt' }],
   });
   template.hasResourceProperties('AWS::EC2::RouteTable', {
     VpcId: { Ref: 'VpcMain' },
-    Tags: [{ Key: 'Name', Value: 'cdktest-private-common-route-table' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-private-common-rt' }],
   });
 
   template.resourceCountIs('AWS::EC2::Route', 1);

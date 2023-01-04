@@ -14,7 +14,8 @@ export interface BaseProps {
  * リソースクラスで継承する抽象クラス.
  */
 export abstract class BaseResource {
-  abstract readonly SERVICE_NAME: string;
+  abstract readonly SERVICE_FULL_NAME: string;
+  abstract readonly SERVICE_SHORT_NAME: string;
 
   protected readonly scope: Construct;
   protected readonly context: object;
@@ -41,7 +42,7 @@ export abstract class BaseResource {
    * @returns リソース名.
    */
   protected createResourceName(originName: string): string {
-    return `${constant.SYSTEM_NAME}-${originName}-${this.SERVICE_NAME}`;
+    return `${constant.SYSTEM_NAME}-${originName}-${this.SERVICE_SHORT_NAME}`;
   }
 
   /**
@@ -55,7 +56,7 @@ export abstract class BaseResource {
    * @returns 論理ID.
    */
   protected createLogicalId(originName: string): string {
-    return this.convertUpperCamelCase(`${this.SERVICE_NAME}-${originName}`);
+    return this.convertUpperCamelCase(`${this.SERVICE_FULL_NAME}-${originName}`);
   }
 
   /**

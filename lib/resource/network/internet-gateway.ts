@@ -14,7 +14,8 @@ interface InternetGatewayProps {
  * InternetGateway を生成するリソースクラス
  */
 export class InternetGateway extends BaseResource {
-  public readonly SERVICE_NAME: string = 'internet-gateway';
+  public readonly SERVICE_FULL_NAME: string = 'internet-gateway';
+  public readonly SERVICE_SHORT_NAME: string = 'igw';
 
   public readonly main: CfnInternetGateway;
 
