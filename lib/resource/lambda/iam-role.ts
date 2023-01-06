@@ -1,9 +1,27 @@
-import { CfnRole, PolicyStatement, PolicyDocument } from 'aws-cdk-lib/aws-iam';
+import {
+  CfnRole,
+  PolicyStatement,
+  PolicyStatementProps,
+  ServicePrincipal,
+  PolicyDocument,
+  PolicyDocumentProps,
+  Effect,
+} from 'aws-cdk-lib/aws-iam';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
 
 /**
- * Iam Role を生成するリソースクラス
+ * IamRole 生成に必要な情報を持つインターフェース
+ */
+interface ResourceInfo {
+  originName: string;
+  policyStatementProps: PolicyStatementProps;
+  managedPolicyArns: string[];
+  assign: (role: IamRole, iamRole: CfnRole) => void;
+}
+
+/**
+ * IamRole を生成するリソースクラス
  */
 export class IamRole extends BaseResource {
   public readonly SERVICE_FULL_NAME: string = 'iam-role';
@@ -11,27 +29,40 @@ export class IamRole extends BaseResource {
 
   public readonly testFunction: CfnRole;
 
+  private readonly resourceList: ResourceInfo[] = [
+    {
+      originName: 'test-function',
+      policyStatementProps: {
+        effect: Effect.ALLOW,
+        principals: [new ServicePrincipal('lambda.amazonaws.com')],
+        actions: ['sts:AssumeRole'],
+      },
+      managedPolicyArns: ['arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'],
+      assign: (role, iamRole) => ((role.testFunction as CfnRole) = iamRole),
+    },
+  ];
+
   constructor(parentProps: BaseProps) {
     super(parentProps);
-    const json = {
-      Version: '2012-10-17',
-      Statement: [
-        {
-          Effect: 'Allow',
-          Principal: {
-            Service: 'lambda.amazonaws.com',
-          },
-          Action: 'sts:AssumeRole',
-        },
-      ],
-    };
 
-    const policyDocment = PolicyDocument.fromJson(json);
+    for (const resourceInfo of this.resourceList) {
+      resourceInfo.assign(this, this.createIamRole(resourceInfo));
+    }
+  }
 
-    this.testFunction = new CfnRole(this.scope, this.createLogicalId('test-function'), {
-      roleName: this.createResourceName('test-function'),
-      assumeRolePolicyDocument: policyDocment,
-      managedPolicyArns: ['arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'],
+  /**
+   * IamRole を生成する.
+   *
+   * @param resourceInfo - 生成するiam-roleの情報を持ったインターフェース
+   * @returns 生成したiam-roleインスタンス
+   */
+  private createIamRole(resourceInfo: ResourceInfo): CfnRole {
+    return new CfnRole(this.scope, this.createLogicalId(resourceInfo.originName), {
+      roleName: this.createResourceName(resourceInfo.originName),
+      assumeRolePolicyDocument: new PolicyDocument({
+        statements: [new PolicyStatement(resourceInfo.policyStatementProps)],
+      }),
+      managedPolicyArns: resourceInfo.managedPolicyArns,
     });
   }
 }
