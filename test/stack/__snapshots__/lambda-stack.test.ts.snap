@@ -1,0 +1,104 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot: LambdaStackSnapshot 1`] = `
+Object {
+  "Parameters": Object {
+    "BootstrapVersion": Object {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": Object {
+    "IamRoleTestFunction": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+        ],
+        "RoleName": "cdktest-test-function-role",
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "LambdaFunctionTest": Object {
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": "ss-test-s3",
+          "S3Key": "test-function.zip",
+        },
+        "FunctionName": "cdktest-test-func",
+        "Handler": "lambda_function.lambda_handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "IamRoleTestFunction",
+            "Arn",
+          ],
+        },
+        "Runtime": "python3.8",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "LambdaFunctionTestAlias": Object {
+      "DependsOn": Array [
+        "LambdaFunctionTest",
+      ],
+      "Properties": Object {
+        "FunctionName": "cdktest-test-func",
+        "FunctionVersion": "$LATEST",
+        "Name": "InService",
+      },
+      "Type": "AWS::Lambda::Alias",
+    },
+    "LambdaFunctionVersionFba078ead8e9fa1a9eb4e2fff3afe9a2": Object {
+      "DeletionPolicy": "Retain",
+      "DependsOn": Array [
+        "LambdaFunctionTest",
+      ],
+      "Properties": Object {
+        "Description": "バージョンが変わる場合は必ずコメントも変わるものとする.",
+        "FunctionName": "cdktest-test-func",
+      },
+      "Type": "AWS::Lambda::Version",
+      "UpdateReplacePolicy": "Retain",
+    },
+  },
+  "Rules": Object {
+    "CheckBootstrapVersion": Object {
+      "Assertions": Array [
+        Object {
+          "Assert": Object {
+            "Fn::Not": Array [
+              Object {
+                "Fn::Contains": Array [
+                  Array [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  Object {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
