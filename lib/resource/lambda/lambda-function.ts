@@ -1,10 +1,4 @@
-import {
-  CfnFunction,
-  CfnAlias,
-  CfnAliasProps,
-  CfnVersion,
-  CfnFunctionProps,
-} from 'aws-cdk-lib/aws-lambda';
+import { CfnFunction, CfnAlias, CfnVersion } from 'aws-cdk-lib/aws-lambda';
 import * as cdk from 'aws-cdk-lib';
 import * as crypto from 'crypto';
 
@@ -50,7 +44,7 @@ export class LambdaFunction extends BaseResource {
     {
       code: {
         s3Bucket: 'ss-test-s3',
-        s3Key: 'test-function.zip',
+        s3Key: 'test-function-2.zip',
       },
       role: (iamRole) => iamRole.testFunction.attrArn,
       originName: 'test',
