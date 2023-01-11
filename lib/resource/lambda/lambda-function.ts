@@ -44,7 +44,7 @@ export class LambdaFunction extends BaseResource {
     {
       code: {
         s3Bucket: 'ss-test-s3',
-        s3Key: 'test-function-2.zip',
+        s3Key: 'test-function.zip',
       },
       role: (iamRole) => iamRole.testFunction.attrArn,
       originName: 'test',

@@ -72,6 +72,13 @@ Object {
       "Type": "AWS::Lambda::Version",
       "UpdateReplacePolicy": "Retain",
     },
+    "LogsMain": Object {
+      "Properties": Object {
+        "LogGroupName": "/aws/lambda/cdktest-test-func",
+        "RetentionInDays": 90,
+      },
+      "Type": "AWS::Logs::LogGroup",
+    },
   },
   "Rules": Object {
     "CheckBootstrapVersion": Object {

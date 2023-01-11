@@ -85,3 +85,13 @@ test('LambdaFunction', () => {
     DeletionPolicy: 'Retain',
   });
 });
+
+test('Logs', () => {
+  const template = createTestTemplate();
+
+  template.resourceCountIs('AWS::Logs::LogGroup', 1);
+  template.hasResourceProperties('AWS::Logs::LogGroup', {
+    LogGroupName: '/aws/lambda/cdktest-test-func',
+    RetentionInDays: 90,
+  });
+});
