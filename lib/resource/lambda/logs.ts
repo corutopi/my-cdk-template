@@ -3,10 +3,10 @@ import * as cdk from 'aws-cdk-lib';
 import * as crypto from 'crypto';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
-import { LambdaFunction  } from './lambda-function'
+import { LambdaFunction } from './lambda-function';
 
 interface LogsProps {
-  lambdaFunction: LambdaFunction 
+  lambdaFunction: LambdaFunction;
 }
 
 interface ResourceInfo {
@@ -20,26 +20,26 @@ interface ResourceInfo {
  * Logs を生成するリソースクラス
  */
 export class Logs extends BaseResource {
-  public readonly SERVICE_FULL_NAME: string = 'logs';
+  public readonly SERVICE_FULL_NAME: string = 'Logs';
   public readonly SERVICE_SHORT_NAME: string = 'logs';
 
   public readonly main: CfnLogGroup;
-  
+
   private readonly lambdaFunction: LambdaFunction;
   private readonly resourceList: ResourceInfo[] = [
     {
       originName: 'main',
       functionName: (lf) => lf.main.functionName as string,
       retentionInDays: 90,
-      assign: (logs, cfnLogGroup) => (logs.main as CfnLogGroup) = cfnLogGroup
+      assign: (logs, cfnLogGroup) => ((logs.main as CfnLogGroup) = cfnLogGroup),
     },
   ];
 
   constructor(parentProps: BaseProps, logsProps: LogsProps) {
     super(parentProps);
-    
-    this.lambdaFunction = logsProps.lambdaFunction
-    
+
+    this.lambdaFunction = logsProps.lambdaFunction;
+
     for (const resourceInfo of this.resourceList) {
       resourceInfo.assign(this, this.createLogGroup(resourceInfo));
     }
@@ -52,10 +52,9 @@ export class Logs extends BaseResource {
    * @returns 生成したLambdaFunctionインスタンス
    */
   private createLogGroup(resourceInfo: ResourceInfo): CfnLogGroup {
-    // const functionName = ${resourceInfo.functionName()}
     return new CfnLogGroup(this.scope, this.createLogicalId(resourceInfo.originName), {
       logGroupName: `/aws/lambda/${resourceInfo.functionName(this.lambdaFunction)}`,
-      retentionInDays: resourceInfo.retentionInDays
-    })
+      retentionInDays: resourceInfo.retentionInDays,
+    });
   }
 }

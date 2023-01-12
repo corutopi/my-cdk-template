@@ -60,13 +60,13 @@ Object {
       },
       "Type": "AWS::Lambda::Alias",
     },
-    "LambdaFunctionTestVersionFba078ead8e9fa1a9eb4e2fff3afe9a2": Object {
+    "LambdaFunctionTestVersion3f9eebb283b6a298918ccaa48964c2ac": Object {
       "DeletionPolicy": "Retain",
       "DependsOn": Array [
         "LambdaFunctionTest",
       ],
       "Properties": Object {
-        "Description": "バージョンが変わる場合は必ずコメントも変わるものとする.",
+        "Description": "When the version changes, the comments must also change.",
         "FunctionName": "cdktest-test-func",
       },
       "Type": "AWS::Lambda::Version",
