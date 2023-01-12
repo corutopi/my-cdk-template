@@ -56,7 +56,7 @@ export class LambdaFunction extends BaseResource {
           version: '$LATEST',
         },
       ],
-      versionComment: 'バージョンが変わる場合は必ずコメントも変わるものとする.',
+      versionComment: 'When the version changes, the comments must also change.',
       assign: (func, cfnFunction) => ((func.main as CfnFunction) = cfnFunction),
     },
   ];
