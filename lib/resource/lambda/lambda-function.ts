@@ -43,7 +43,7 @@ export class LambdaFunction extends BaseResource {
   private readonly resourceList: ResourceInfo[] = [
     {
       code: {
-        s3Bucket: 'ss-test-s3',
+        s3Bucket: this.context.resourceBucket,
         s3Key: 'test-function.zip',
       },
       role: (iamRole) => iamRole.testFunction.attrArn,

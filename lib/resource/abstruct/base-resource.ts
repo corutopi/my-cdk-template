@@ -19,7 +19,7 @@ export abstract class BaseResource {
 
   protected readonly scope: Construct;
   protected readonly stage: string;
-  protected readonly context: object;
+  protected readonly context: any;
 
   constructor(baseProps: BaseProps) {
     this.scope = baseProps.scope;

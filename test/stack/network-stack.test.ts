@@ -1,6 +1,8 @@
 import * as cdk from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
+
 import { NetworkStack } from '../../lib/stack/network-stack';
+import * as tc from '../test-constant';
 
 /**
  * テストで使用するテンプレートを生成する.
@@ -8,7 +10,7 @@ import { NetworkStack } from '../../lib/stack/network-stack';
  * @returns 生成した Template インスタンス
  */
 function createTestTemplate(): Template {
-  const app = new cdk.App();
+  const app = new cdk.App({ context: tc.CONTEXT });
   const stack = new NetworkStack(app, 'TestStack');
   const template = Template.fromStack(stack);
   return template;
@@ -27,7 +29,7 @@ test('Vpc', () => {
   template.resourceCountIs('AWS::EC2::VPC', 1);
   template.hasResourceProperties('AWS::EC2::VPC', {
     CidrBlock: '10.10.0.0/16',
-    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-main-vpc' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-dev-main-vpc' }],
   });
 });
 
@@ -38,22 +40,22 @@ test('Subnet', () => {
   template.hasResourceProperties('AWS::EC2::Subnet', {
     CidrBlock: '10.10.1.0/24',
     VpcId: { Ref: 'VpcMain' },
-    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-public-a-subnet' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-dev-public-a-subnet' }],
   });
   template.hasResourceProperties('AWS::EC2::Subnet', {
     CidrBlock: '10.10.2.0/24',
     VpcId: { Ref: 'VpcMain' },
-    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-public-c-subnet' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-dev-public-c-subnet' }],
   });
   template.hasResourceProperties('AWS::EC2::Subnet', {
     CidrBlock: '10.10.11.0/24',
     VpcId: { Ref: 'VpcMain' },
-    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-private-a-subnet' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-dev-private-a-subnet' }],
   });
   template.hasResourceProperties('AWS::EC2::Subnet', {
     CidrBlock: '10.10.12.0/24',
     VpcId: { Ref: 'VpcMain' },
-    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-private-c-subnet' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-dev-private-c-subnet' }],
   });
 });
 
@@ -62,7 +64,7 @@ test('InternetGateway', () => {
 
   template.resourceCountIs('AWS::EC2::InternetGateway', 1);
   template.hasResourceProperties('AWS::EC2::InternetGateway', {
-    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-main-igw' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-dev-main-igw' }],
   });
   template.resourceCountIs('AWS::EC2::VPCGatewayAttachment', 1);
   template.hasResourceProperties('AWS::EC2::VPCGatewayAttachment', {
@@ -77,11 +79,11 @@ test('RouteTable', () => {
   template.resourceCountIs('AWS::EC2::RouteTable', 2);
   template.hasResourceProperties('AWS::EC2::RouteTable', {
     VpcId: { Ref: 'VpcMain' },
-    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-public-common-rt' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-dev-public-common-rt' }],
   });
   template.hasResourceProperties('AWS::EC2::RouteTable', {
     VpcId: { Ref: 'VpcMain' },
-    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-private-common-rt' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-dev-private-common-rt' }],
   });
 
   template.resourceCountIs('AWS::EC2::Route', 1);

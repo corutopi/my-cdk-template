@@ -20,6 +20,7 @@
   "context": {
     "stage": "dev",
     "dev": {
+      "resourceBucket": "resourceBucket"
     }
   }
 }

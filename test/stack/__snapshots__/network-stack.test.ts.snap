@@ -15,7 +15,7 @@ Object {
         "Tags": Array [
           Object {
             "Key": "Name",
-            "Value": "cdktest-undefined-main-igw",
+            "Value": "cdktest-dev-main-igw",
           },
         ],
       },
@@ -37,7 +37,7 @@ Object {
         "Tags": Array [
           Object {
             "Key": "Name",
-            "Value": "cdktest-undefined-private-common-rt",
+            "Value": "cdktest-dev-private-common-rt",
           },
         ],
         "VpcId": Object {
@@ -51,7 +51,7 @@ Object {
         "Tags": Array [
           Object {
             "Key": "Name",
-            "Value": "cdktest-undefined-public-common-rt",
+            "Value": "cdktest-dev-public-common-rt",
           },
         ],
         "VpcId": Object {
@@ -122,7 +122,7 @@ Object {
         "Tags": Array [
           Object {
             "Key": "Name",
-            "Value": "cdktest-undefined-private-a-subnet",
+            "Value": "cdktest-dev-private-a-subnet",
           },
         ],
         "VpcId": Object {
@@ -137,7 +137,7 @@ Object {
         "Tags": Array [
           Object {
             "Key": "Name",
-            "Value": "cdktest-undefined-private-c-subnet",
+            "Value": "cdktest-dev-private-c-subnet",
           },
         ],
         "VpcId": Object {
@@ -152,7 +152,7 @@ Object {
         "Tags": Array [
           Object {
             "Key": "Name",
-            "Value": "cdktest-undefined-public-a-subnet",
+            "Value": "cdktest-dev-public-a-subnet",
           },
         ],
         "VpcId": Object {
@@ -167,7 +167,7 @@ Object {
         "Tags": Array [
           Object {
             "Key": "Name",
-            "Value": "cdktest-undefined-public-c-subnet",
+            "Value": "cdktest-dev-public-c-subnet",
           },
         ],
         "VpcId": Object {
@@ -182,7 +182,7 @@ Object {
         "Tags": Array [
           Object {
             "Key": "Name",
-            "Value": "cdktest-undefined-main-vpc",
+            "Value": "cdktest-dev-main-vpc",
           },
         ],
       },
