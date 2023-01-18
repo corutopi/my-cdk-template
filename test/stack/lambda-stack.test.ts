@@ -39,7 +39,7 @@ test('IamRole', () => {
       Version: '2012-10-17',
     },
     ManagedPolicyArns: ['arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'],
-    RoleName: 'cdktest-test-function-role',
+    RoleName: 'cdktest-undefined-test-function-role',
   });
 });
 
@@ -55,20 +55,20 @@ test('LambdaFunction', () => {
     Role: {
       'Fn::GetAtt': ['IamRoleTestFunction', 'Arn'],
     },
-    FunctionName: 'cdktest-test-func',
+    FunctionName: 'cdktest-undefined-test-func',
     Handler: 'lambda_function.lambda_handler',
     Runtime: 'python3.8',
   });
   template.resourceCountIs('AWS::Lambda::Alias', 1);
   template.hasResourceProperties('AWS::Lambda::Alias', {
-    FunctionName: 'cdktest-test-func',
+    FunctionName: 'cdktest-undefined-test-func',
     FunctionVersion: '$LATEST',
     Name: 'InService',
   });
   template.resourceCountIs('AWS::Lambda::Version', 1);
   template.hasResource('AWS::Lambda::Version', {
     Properties: {
-      FunctionName: 'cdktest-test-func',
+      FunctionName: 'cdktest-undefined-test-func',
       Description: Match.anyValue(),
     },
     DependsOn: ['LambdaFunctionTest'],
@@ -77,7 +77,7 @@ test('LambdaFunction', () => {
   });
   const f = template.findResources('AWS::Lambda::Version', {
     Properties: {
-      FunctionName: 'cdktest-test-func',
+      FunctionName: 'cdktest-undefined-test-func',
       Description: Match.anyValue(),
     },
     DependsOn: ['LambdaFunctionTest'],
@@ -91,7 +91,7 @@ test('Logs', () => {
 
   template.resourceCountIs('AWS::Logs::LogGroup', 1);
   template.hasResourceProperties('AWS::Logs::LogGroup', {
-    LogGroupName: '/aws/lambda/cdktest-test-func',
+    LogGroupName: '/aws/lambda/cdktest-undefined-test-func',
     RetentionInDays: 90,
   });
 });

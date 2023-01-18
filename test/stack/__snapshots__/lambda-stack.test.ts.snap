@@ -27,7 +27,7 @@ Object {
         "ManagedPolicyArns": Array [
           "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
         ],
-        "RoleName": "cdktest-test-function-role",
+        "RoleName": "cdktest-undefined-test-function-role",
       },
       "Type": "AWS::IAM::Role",
     },
@@ -37,7 +37,7 @@ Object {
           "S3Bucket": "ss-test-s3",
           "S3Key": "test-function.zip",
         },
-        "FunctionName": "cdktest-test-func",
+        "FunctionName": "cdktest-undefined-test-func",
         "Handler": "lambda_function.lambda_handler",
         "Role": Object {
           "Fn::GetAtt": Array [
@@ -54,7 +54,7 @@ Object {
         "LambdaFunctionTest",
       ],
       "Properties": Object {
-        "FunctionName": "cdktest-test-func",
+        "FunctionName": "cdktest-undefined-test-func",
         "FunctionVersion": "$LATEST",
         "Name": "InService",
       },
@@ -67,14 +67,14 @@ Object {
       ],
       "Properties": Object {
         "Description": "When the version changes, the comments must also change.",
-        "FunctionName": "cdktest-test-func",
+        "FunctionName": "cdktest-undefined-test-func",
       },
       "Type": "AWS::Lambda::Version",
       "UpdateReplacePolicy": "Retain",
     },
     "LogsMain": Object {
       "Properties": Object {
-        "LogGroupName": "/aws/lambda/cdktest-test-func",
+        "LogGroupName": "/aws/lambda/cdktest-undefined-test-func",
         "RetentionInDays": 90,
       },
       "Type": "AWS::Logs::LogGroup",

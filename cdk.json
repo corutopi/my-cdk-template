@@ -39,6 +39,8 @@
       "aws",
       "aws-cn"
     ],
-    "stage": "dev"
+    "stage": "dev",
+    "dev": {
+    }
   }
 }

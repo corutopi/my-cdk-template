@@ -18,11 +18,13 @@ export abstract class BaseResource {
   abstract readonly SERVICE_SHORT_NAME: string;
 
   protected readonly scope: Construct;
+  protected readonly env: string;
   protected readonly context: object;
 
   constructor(baseProps: BaseProps) {
     this.scope = baseProps.scope;
-    this.context = this.scope.node.tryGetContext;
+    this.env = this.scope.node.tryGetContext('env');
+    this.context = this.scope.node.tryGetContext(this.env);
   }
 
   /**
@@ -42,7 +44,7 @@ export abstract class BaseResource {
    * @returns リソース名.
    */
   protected createResourceName(originName: string): string {
-    return `${constant.SYSTEM_NAME}-${originName}-${this.SERVICE_SHORT_NAME}`;
+    return `${constant.SYSTEM_NAME}-${this.env}-${originName}-${this.SERVICE_SHORT_NAME}`;
   }
 
   /**

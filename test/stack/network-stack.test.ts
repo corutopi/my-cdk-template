@@ -27,7 +27,7 @@ test('Vpc', () => {
   template.resourceCountIs('AWS::EC2::VPC', 1);
   template.hasResourceProperties('AWS::EC2::VPC', {
     CidrBlock: '10.10.0.0/16',
-    Tags: [{ Key: 'Name', Value: 'cdktest-main-vpc' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-main-vpc' }],
   });
 });
 
@@ -38,22 +38,22 @@ test('Subnet', () => {
   template.hasResourceProperties('AWS::EC2::Subnet', {
     CidrBlock: '10.10.1.0/24',
     VpcId: { Ref: 'VpcMain' },
-    Tags: [{ Key: 'Name', Value: 'cdktest-public-a-subnet' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-public-a-subnet' }],
   });
   template.hasResourceProperties('AWS::EC2::Subnet', {
     CidrBlock: '10.10.2.0/24',
     VpcId: { Ref: 'VpcMain' },
-    Tags: [{ Key: 'Name', Value: 'cdktest-public-c-subnet' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-public-c-subnet' }],
   });
   template.hasResourceProperties('AWS::EC2::Subnet', {
     CidrBlock: '10.10.11.0/24',
     VpcId: { Ref: 'VpcMain' },
-    Tags: [{ Key: 'Name', Value: 'cdktest-private-a-subnet' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-private-a-subnet' }],
   });
   template.hasResourceProperties('AWS::EC2::Subnet', {
     CidrBlock: '10.10.12.0/24',
     VpcId: { Ref: 'VpcMain' },
-    Tags: [{ Key: 'Name', Value: 'cdktest-private-c-subnet' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-private-c-subnet' }],
   });
 });
 
@@ -62,7 +62,7 @@ test('InternetGateway', () => {
 
   template.resourceCountIs('AWS::EC2::InternetGateway', 1);
   template.hasResourceProperties('AWS::EC2::InternetGateway', {
-    Tags: [{ Key: 'Name', Value: 'cdktest-main-igw' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-main-igw' }],
   });
   template.resourceCountIs('AWS::EC2::VPCGatewayAttachment', 1);
   template.hasResourceProperties('AWS::EC2::VPCGatewayAttachment', {
@@ -77,11 +77,11 @@ test('RouteTable', () => {
   template.resourceCountIs('AWS::EC2::RouteTable', 2);
   template.hasResourceProperties('AWS::EC2::RouteTable', {
     VpcId: { Ref: 'VpcMain' },
-    Tags: [{ Key: 'Name', Value: 'cdktest-public-common-rt' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-public-common-rt' }],
   });
   template.hasResourceProperties('AWS::EC2::RouteTable', {
     VpcId: { Ref: 'VpcMain' },
-    Tags: [{ Key: 'Name', Value: 'cdktest-private-common-rt' }],
+    Tags: [{ Key: 'Name', Value: 'cdktest-undefined-private-common-rt' }],
   });
 
   template.resourceCountIs('AWS::EC2::Route', 1);
