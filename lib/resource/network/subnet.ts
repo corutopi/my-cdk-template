@@ -16,6 +16,8 @@ interface SubnetProps {
 interface ResourceInfo {
   originName: string;
   cidrBlock: string;
+  availabilityZone: string;
+  mapPublicIpOnLaunch: boolean;
   /**
    * メンバ変数に生成したCfnSubnetインスタンスを代入する処理を実装する.
    *
@@ -46,21 +48,29 @@ export class Subnet extends BaseResource {
     {
       originName: 'public-a',
       cidrBlock: '10.10.1.0/24',
+      availabilityZone: 'ap-northeast-1a',
+      mapPublicIpOnLaunch: true,
       assign: (s, subnet) => ((s.publicA as CfnSubnet) = subnet),
     },
     {
       originName: 'public-c',
       cidrBlock: '10.10.2.0/24',
+      availabilityZone: 'ap-northeast-1c',
+      mapPublicIpOnLaunch: true,
       assign: (s, subnet) => ((s.publicC as CfnSubnet) = subnet),
     },
     {
       originName: 'private-a',
       cidrBlock: '10.10.11.0/24',
+      availabilityZone: 'ap-northeast-1a',
+      mapPublicIpOnLaunch: false,
       assign: (s, subnet) => ((s.privateA as CfnSubnet) = subnet),
     },
     {
       originName: 'private-c',
       cidrBlock: '10.10.12.0/24',
+      availabilityZone: 'ap-northeast-1c',
+      mapPublicIpOnLaunch: false,
       assign: (s, subnet) => ((s.privateC as CfnSubnet) = subnet),
     },
   ];
@@ -78,14 +88,16 @@ export class Subnet extends BaseResource {
   /**
    * subnet を生成する.
    *
-   * @param resourceInfo - 生成するsubnetの情報を持ったインターフェース
+   * @param ri - 生成するsubnetの情報を持ったインターフェース
    * @returns 生成したsubnetインスタンス
    */
-  private createSubnet(resourceInfo: ResourceInfo): CfnSubnet {
-    return new CfnSubnet(this.scope, this.createLogicalId(resourceInfo.originName), {
+  private createSubnet(ri: ResourceInfo): CfnSubnet {
+    return new CfnSubnet(this.scope, this.createLogicalId(ri.originName), {
       vpcId: this.vpc.main.ref,
-      cidrBlock: resourceInfo.cidrBlock,
-      tags: [this.createNameTagProps(resourceInfo.originName)],
+      cidrBlock: ri.cidrBlock,
+      availabilityZone: ri.availabilityZone,
+      mapPublicIpOnLaunch: ri.mapPublicIpOnLaunch,
+      tags: [this.createNameTagProps(ri.originName)],
     });
   }
 }
