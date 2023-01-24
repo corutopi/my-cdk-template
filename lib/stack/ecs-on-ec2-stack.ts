@@ -6,10 +6,11 @@ import { SecurityGroup } from '../resource/ecs-on-ec2/security-group';
 import { Instance } from '../resource/ecs-on-ec2/ec2-instance';
 import { EcsCluster } from '../resource/ecs-on-ec2/ecs-cluster';
 import { TaskDefinition } from '../resource/ecs-on-ec2/task-definition';
+import { ApplicationLoadBalancer } from '../resource/ecs-on-ec2/application-load-balancer';
 import { NetworkStack } from '../stack/network-stack';
 
 /**
- * NetworkStack を作成するクラス.
+ * EcsOnEc2Stack を作成するクラス.
  */
 export class EcsOnEc2Stack extends cdk.Stack {
   public readonly role: IamRole;
@@ -17,6 +18,7 @@ export class EcsOnEc2Stack extends cdk.Stack {
   public readonly ins: Instance;
   public readonly cluster: EcsCluster;
   public readonly task: TaskDefinition;
+  public readonly alb: ApplicationLoadBalancer;
 
   constructor(scope: Construct, id: string, networkStack: NetworkStack, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -28,5 +30,9 @@ export class EcsOnEc2Stack extends cdk.Stack {
     );
     this.cluster = new EcsCluster({ scope: this });
     this.task = new TaskDefinition({ scope: this });
+    this.alb = new ApplicationLoadBalancer(
+      { scope: this },
+      { subnet: networkStack.subnet, sg: this.sg }
+    );
   }
 }
