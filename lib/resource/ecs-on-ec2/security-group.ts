@@ -33,7 +33,8 @@ export class SecurityGroup extends BaseResource {
   public readonly SERVICE_SHORT_NAME: string = 'sg';
 
   public readonly ssh: CfnSecurityGroup;
-  public readonly http: CfnSecurityGroup;
+  public readonly alb: CfnSecurityGroup;
+  public readonly ecs: CfnSecurityGroup;
 
   private readonly vpc: Vpc;
   private readonly resourceList: ResourceInfo[] = [
@@ -54,20 +55,44 @@ export class SecurityGroup extends BaseResource {
       assign: (sg, cfnSg) => ((sg.ssh as CfnSecurityGroup) = cfnSg),
     },
     {
-      originName: 'http',
-      description: 'allow http access.',
+      originName: 'alb',
+      description: 'for alb.',
       vpcId: (sg) => sg.vpc.main.ref,
       inboundRules: [
         {
-          originName: 'all-ip',
+          originName: 'http',
           ipProtocol: 'tcp',
           cidrIp: '0.0.0.0/0',
           fromPort: 80,
           toPort: 80,
-          description: '(all)',
+          description: 'allow http',
+        },
+        {
+          originName: 'for-blue-green-http',
+          ipProtocol: 'tcp',
+          cidrIp: '0.0.0.0/0',
+          fromPort: 8080,
+          toPort: 8080,
+          description: 'allow http (blue-green)',
         },
       ],
-      assign: (sg, cfnSg) => ((sg.http as CfnSecurityGroup) = cfnSg),
+      assign: (sg, cfnSg) => ((sg.alb as CfnSecurityGroup) = cfnSg),
+    },
+    {
+      originName: 'ecs',
+      description: 'for ecs server.',
+      vpcId: (sg) => sg.vpc.main.ref,
+      inboundRules: [
+        {
+          originName: 'http',
+          ipProtocol: 'tcp',
+          cidrIp: '0.0.0.0/0',
+          fromPort: 80,
+          toPort: 80,
+          description: 'allow http',
+        },
+      ],
+      assign: (sg, cfnSg) => ((sg.ecs as CfnSecurityGroup) = cfnSg),
     },
   ];
 

@@ -7,6 +7,7 @@ import { Instance } from '../resource/ecs-on-ec2/ec2-instance';
 import { EcsCluster } from '../resource/ecs-on-ec2/ecs-cluster';
 import { TaskDefinition } from '../resource/ecs-on-ec2/task-definition';
 import { ApplicationLoadBalancer } from '../resource/ecs-on-ec2/application-load-balancer';
+import { TargetGroup } from '../resource/ecs-on-ec2/target-group';
 import { NetworkStack } from '../stack/network-stack';
 
 /**
@@ -18,21 +19,23 @@ export class EcsOnEc2Stack extends cdk.Stack {
   public readonly ins: Instance;
   public readonly cluster: EcsCluster;
   public readonly task: TaskDefinition;
+  public readonly tg: TargetGroup;
   public readonly alb: ApplicationLoadBalancer;
 
   constructor(scope: Construct, id: string, networkStack: NetworkStack, props?: cdk.StackProps) {
     super(scope, id, props);
     this.role = new IamRole({ scope: this });
     this.sg = new SecurityGroup({ scope: this }, { vpc: networkStack.vpc });
-    this.ins = new Instance(
-      { scope: this },
-      { role: this.role, sg: this.sg, subnet: networkStack.subnet }
-    );
     this.cluster = new EcsCluster({ scope: this });
     this.task = new TaskDefinition({ scope: this });
+    this.ins = new Instance(
+      { scope: this },
+      { role: this.role, sg: this.sg, subnet: networkStack.subnet, cluster: this.cluster }
+    );
+    this.tg = new TargetGroup({ scope: this }, { vpc: networkStack.vpc });
     this.alb = new ApplicationLoadBalancer(
       { scope: this },
-      { subnet: networkStack.subnet, sg: this.sg }
+      { subnet: networkStack.subnet, sg: this.sg, tg: this.tg }
     );
   }
 }
