@@ -1,3 +1,4 @@
+import * as cdk from 'aws-cdk-lib';
 import { CfnTaskDefinition } from 'aws-cdk-lib/aws-ecs';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
@@ -51,9 +52,13 @@ export class TaskDefinition extends BaseResource {
   }
 
   private createTaskDefinition(ri: ResourceInfo): CfnTaskDefinition {
-    return new CfnTaskDefinition(this.scope, this.createLogicalId(ri.originName), {
+    const task = new CfnTaskDefinition(this.scope, this.createLogicalId(ri.originName), {
       containerDefinitions: ri.containerDefinitions,
       family: this.createResourceName(ri.originName),
     });
+
+    task.applyRemovalPolicy(cdk.RemovalPolicy.RETAIN);
+
+    return task;
   }
 }

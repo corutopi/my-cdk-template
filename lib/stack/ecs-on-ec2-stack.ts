@@ -8,6 +8,9 @@ import { EcsCluster } from '../resource/ecs-on-ec2/ecs-cluster';
 import { TaskDefinition } from '../resource/ecs-on-ec2/task-definition';
 import { ApplicationLoadBalancer } from '../resource/ecs-on-ec2/application-load-balancer';
 import { TargetGroup } from '../resource/ecs-on-ec2/target-group';
+import { EcsService } from '../resource/ecs-on-ec2/ecs-service';
+import { CodeDeployApplication } from '../resource/ecs-on-ec2/code-deploy-application';
+import { CodeDeployDeploymentGroup } from '../resource/ecs-on-ec2/code-deploy-group';
 import { NetworkStack } from '../stack/network-stack';
 
 /**
@@ -21,6 +24,9 @@ export class EcsOnEc2Stack extends cdk.Stack {
   public readonly task: TaskDefinition;
   public readonly tg: TargetGroup;
   public readonly alb: ApplicationLoadBalancer;
+  public readonly service: EcsService;
+  public readonly application: CodeDeployApplication;
+  public readonly deploymentGroup: CodeDeployDeploymentGroup;
 
   constructor(scope: Construct, id: string, networkStack: NetworkStack, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -36,6 +42,22 @@ export class EcsOnEc2Stack extends cdk.Stack {
     this.alb = new ApplicationLoadBalancer(
       { scope: this },
       { subnet: networkStack.subnet, sg: this.sg, tg: this.tg }
+    );
+    this.service = new EcsService(
+      { scope: this },
+      { tg: this.tg, alb: this.alb, cluster: this.cluster }
+    );
+    this.application = new CodeDeployApplication({ scope: this });
+    this.deploymentGroup = new CodeDeployDeploymentGroup(
+      { scope: this },
+      {
+        alb: this.alb,
+        codeDeployApplication: this.application,
+        ecsCluster: this.cluster,
+        ecsService: this.service,
+        iamRole: this.role,
+        tg: this.tg,
+      }
     );
   }
 }

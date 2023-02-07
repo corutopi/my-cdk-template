@@ -38,6 +38,7 @@ export class IamRole extends BaseResource {
   public readonly SERVICE_SHORT_NAME: string = 'role';
 
   public readonly forEcs: CfnRole;
+  public readonly forEcsCodeDeploy: CfnRole;
   public readonly forEcsInstanceProfile: CfnInstanceProfile;
 
   private readonly resourceList: ResourceInfo[] = [
@@ -57,6 +58,16 @@ export class IamRole extends BaseResource {
         assign: (role, cfnIp) => ((role.forEcsInstanceProfile as CfnInstanceProfile) = cfnIp),
       },
       assign: (role, iamRole) => ((role.forEcs as CfnRole) = iamRole),
+    },
+    {
+      originName: 'for-ecs-code-deploy',
+      policyStatementProps: {
+        effect: Effect.ALLOW,
+        principals: [new ServicePrincipal('codedeploy.amazonaws.com')],
+        actions: ['sts:AssumeRole'],
+      },
+      managedPolicyArns: ['arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS'],
+      assign: (role, iamRole) => ((role.forEcsCodeDeploy as CfnRole) = iamRole),
     },
   ];
 

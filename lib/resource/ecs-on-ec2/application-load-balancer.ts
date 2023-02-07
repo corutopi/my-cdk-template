@@ -19,6 +19,7 @@ interface ListenerInfo {
   }[];
   readonly port: number;
   readonly protocol: 'HTTP' | 'HTTPS';
+  readonly assign: (lb: ApplicationLoadBalancer, cfnListener: CfnListener) => void;
 }
 
 interface ResourceInfo {
@@ -37,6 +38,8 @@ export class ApplicationLoadBalancer extends BaseResource {
   public readonly SERVICE_SHORT_NAME: string = 'alb';
 
   public readonly test: CfnLoadBalancer;
+  public readonly testListener80: CfnListener;
+  public readonly testListener8080: CfnListener;
 
   private readonly subnet: Subnet;
   private readonly sg: SecurityGroup;
@@ -52,12 +55,14 @@ export class ApplicationLoadBalancer extends BaseResource {
           defaultActions: [{ type: 'forward', targetGroupArn: (alb) => alb.tg.test1.ref }],
           port: 80,
           protocol: 'HTTP',
+          assign: (alb, cfnListener) => ((alb.testListener80 as CfnListener) = cfnListener),
         },
         {
           originName: 'green-port',
           defaultActions: [{ type: 'forward', targetGroupArn: (alb) => alb.tg.test2.ref }],
           port: 8080,
           protocol: 'HTTP',
+          assign: (alb, cfnListener) => ((alb.testListener8080 as CfnListener) = cfnListener),
         },
       ],
       assign: (lb, cfnLb) => ((lb.test as CfnLoadBalancer) = cfnLb),
@@ -88,12 +93,12 @@ export class ApplicationLoadBalancer extends BaseResource {
       securityGroups: securityGroups,
       type: 'application',
     });
-    for (const li of ri.listeners) this.createListener(li, alb);
+    for (const li of ri.listeners) li.assign(this, this.createListener(li, alb));
 
     return alb;
   }
 
-  private createListener(li: ListenerInfo, cfnLb: CfnLoadBalancer) {
+  private createListener(li: ListenerInfo, cfnLb: CfnLoadBalancer): CfnListener {
     const defaultActions: CfnListener.ActionProperty[] = [];
     for (const da of li.defaultActions) {
       defaultActions.push({
@@ -102,7 +107,7 @@ export class ApplicationLoadBalancer extends BaseResource {
       });
     }
 
-    new CfnListener(this.scope, this.createLogicalId(`listener-${li.originName}`), {
+    return new CfnListener(this.scope, this.createLogicalId(`listener-${li.originName}`), {
       defaultActions: defaultActions,
       loadBalancerArn: cfnLb.ref,
       port: li.port,
