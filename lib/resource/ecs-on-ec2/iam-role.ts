@@ -7,6 +7,7 @@ import {
   PolicyDocument,
   Effect,
 } from 'aws-cdk-lib/aws-iam';
+import * as cons from '../../constant';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
 
@@ -34,8 +35,8 @@ interface ResourceInfo {
  * IamRole を生成するリソースクラス
  */
 export class IamRole extends BaseResource {
-  public readonly SERVICE_FULL_NAME: string = 'iam-role';
-  public readonly SERVICE_SHORT_NAME: string = 'role';
+  public readonly SERVICE_FULL_NAME: string = cons.SERVICE_NAME.iam.role.full;
+  public readonly SERVICE_SHORT_NAME: string = cons.SERVICE_NAME.iam.role.short;
 
   public readonly forEcs: CfnRole;
   public readonly forEcsCodeDeploy: CfnRole;

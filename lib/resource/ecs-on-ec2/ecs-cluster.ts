@@ -1,6 +1,7 @@
 import { CfnCluster } from 'aws-cdk-lib/aws-ecs';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import * as cons from '../../constant';
 
 interface ResourceInfo {
   readonly originName: string;
@@ -12,8 +13,8 @@ interface ResourceInfo {
  * EcsCluster を生成するリソースクラス
  */
 export class EcsCluster extends BaseResource {
-  public readonly SERVICE_FULL_NAME: string = 'ecs-cluster';
-  public readonly SERVICE_SHORT_NAME: string = 'cluster';
+  public readonly SERVICE_FULL_NAME: string = cons.SERVICE_NAME.ecs.cluster.full;
+  public readonly SERVICE_SHORT_NAME: string = cons.SERVICE_NAME.ecs.cluster.short;
 
   public readonly test: CfnCluster;
 

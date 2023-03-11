@@ -17,7 +17,7 @@ export const SERVICE_NAME = {
   },
   ec2: {
     instance: { full: 'EC2Instance', short: 'ins' },
-    vpc: { full: 'VPC', short: 'vpc' },
+    vpc: { full: 'Vpc', short: 'vpc' },
     subnet: { full: 'Subnet', short: 'subnet' },
     routeTable: { full: 'RouteTable', short: 'rt' },
     internetGateway: { full: 'InternetGateway', short: 'igw' },

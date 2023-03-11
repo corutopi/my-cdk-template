@@ -1,6 +1,7 @@
 import { CfnApplication } from 'aws-cdk-lib/aws-codedeploy';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import * as cons from '../../constant';
 
 interface ResourceInfo {
   readonly originName: string;
@@ -11,8 +12,8 @@ interface ResourceInfo {
  * EcsCluster を生成するリソースクラス
  */
 export class CodeDeployApplication extends BaseResource {
-  public readonly SERVICE_FULL_NAME: string = 'CodeDeployApplication';
-  public readonly SERVICE_SHORT_NAME: string = 'application';
+  public readonly SERVICE_FULL_NAME: string = cons.SERVICE_NAME.codeDeploy.application.full;
+  public readonly SERVICE_SHORT_NAME: string = cons.SERVICE_NAME.codeDeploy.application.short;
 
   public readonly test: CfnApplication;
 

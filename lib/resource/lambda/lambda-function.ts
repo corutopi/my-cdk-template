@@ -4,6 +4,7 @@ import * as crypto from 'crypto';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
 import { IamRole } from './iam-role';
+import * as cons from '../../constant';
 
 interface LambdaFunctionProps {
   iamRole: IamRole;
@@ -34,8 +35,8 @@ interface ResourceInfo {
  * Lambda Function を生成するリソースクラス
  */
 export class LambdaFunction extends BaseResource {
-  public readonly SERVICE_FULL_NAME: string = 'lambda-function';
-  public readonly SERVICE_SHORT_NAME: string = 'func';
+  public readonly SERVICE_FULL_NAME: string = cons.SERVICE_NAME.lambda.function.full;
+  public readonly SERVICE_SHORT_NAME: string = cons.SERVICE_NAME.lambda.function.short;
 
   public readonly main: CfnFunction;
 

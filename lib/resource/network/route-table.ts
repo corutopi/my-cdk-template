@@ -4,6 +4,7 @@ import { BaseResource, BaseProps } from '../abstruct/base-resource';
 import { Vpc } from './vpc';
 import { Subnet } from './subnet';
 import { InternetGateway } from './internet-gateway';
+import * as cons from '../../constant';
 
 /**
  * RouteTable クラスの引数用インターフェース.
@@ -55,8 +56,8 @@ interface ResourceInfo {
  * Subnet を生成するリソースクラス
  */
 export class RouteTable extends BaseResource {
-  public readonly SERVICE_FULL_NAME: string = 'route-table';
-  public readonly SERVICE_SHORT_NAME: string = 'rt';
+  public readonly SERVICE_FULL_NAME: string = cons.SERVICE_NAME.ec2.routeTable.full;
+  public readonly SERVICE_SHORT_NAME: string = cons.SERVICE_NAME.ec2.routeTable.short;
 
   public readonly publicCommon: CfnRouteTable;
   public readonly privateCommon: CfnRouteTable;
@@ -161,10 +162,17 @@ export class RouteTable extends BaseResource {
    * @param rt - Subnet と紐づける RotueTable 情報
    * @param associationInfo - 生成する SubnetRouteTableAssociation の情報を持ったインターフェース
    */
-  private createSubnetRouteTableAssociation(rt: CfnRouteTable, associationInfo: SubnetRouteTableAssociationInfo) {
-    new CfnSubnetRouteTableAssociation(this.scope, this.createLogicalId(associationInfo.originName), {
-      routeTableId: rt.ref,
-      subnetId: associationInfo.subnetId(this),
-    });
+  private createSubnetRouteTableAssociation(
+    rt: CfnRouteTable,
+    associationInfo: SubnetRouteTableAssociationInfo
+  ) {
+    new CfnSubnetRouteTableAssociation(
+      this.scope,
+      this.createLogicalId(associationInfo.originName),
+      {
+        routeTableId: rt.ref,
+        subnetId: associationInfo.subnetId(this),
+      }
+    );
   }
 }

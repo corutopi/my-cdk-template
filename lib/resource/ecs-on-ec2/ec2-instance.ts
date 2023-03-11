@@ -8,6 +8,7 @@ import { IamRole } from './iam-role';
 import { SecurityGroup } from './security-group';
 import { EcsCluster } from './ecs-cluster';
 import { Subnet } from '../network/subnet';
+import * as cons from '../../constant';
 
 interface ResourceProps {
   readonly role: IamRole;
@@ -33,8 +34,8 @@ interface ResourceInfo {
  * Instance を生成するリソースクラス
  */
 export class Instance extends BaseResource {
-  public readonly SERVICE_FULL_NAME: string = 'instance';
-  public readonly SERVICE_SHORT_NAME: string = 'ins';
+  public readonly SERVICE_FULL_NAME: string = cons.SERVICE_NAME.ec2.instance.full;
+  public readonly SERVICE_SHORT_NAME: string = cons.SERVICE_NAME.ec2.instance.short;
 
   public readonly ecs: CfnInstance;
 

@@ -2,6 +2,7 @@ import { CfnTargetGroup } from 'aws-cdk-lib/aws-elasticloadbalancingv2';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
 import { Vpc } from '../network/vpc';
+import * as cons from '../../constant';
 
 interface ResourceProps {
   readonly vpc: Vpc;
@@ -21,8 +22,8 @@ interface ResourceInfo {
  * ApplicationLoadBalancer を生成するリソースクラス
  */
 export class TargetGroup extends BaseResource {
-  public readonly SERVICE_FULL_NAME: string = 'target-group';
-  public readonly SERVICE_SHORT_NAME: string = 'tg';
+  public readonly SERVICE_FULL_NAME: string = cons.SERVICE_NAME.elb.targetGroup.full;
+  public readonly SERVICE_SHORT_NAME: string = cons.SERVICE_NAME.elb.targetGroup.short;
 
   public readonly test1: CfnTargetGroup;
   public readonly test2: CfnTargetGroup;

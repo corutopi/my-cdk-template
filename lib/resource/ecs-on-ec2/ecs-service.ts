@@ -4,6 +4,7 @@ import { BaseResource, BaseProps } from '../abstruct/base-resource';
 import { TargetGroup } from './target-group';
 import { EcsCluster } from './ecs-cluster';
 import { ApplicationLoadBalancer } from './application-load-balancer';
+import * as cons from '../../constant';
 
 interface ResourceProps {
   readonly tg: TargetGroup;
@@ -20,8 +21,8 @@ interface ResourceInfo {
  * EcsCluster を生成するリソースクラス
  */
 export class EcsService extends BaseResource {
-  public readonly SERVICE_FULL_NAME: string = 'ecs-service';
-  public readonly SERVICE_SHORT_NAME: string = 'service';
+  public readonly SERVICE_FULL_NAME: string = cons.SERVICE_NAME.ecs.service.full;
+  public readonly SERVICE_SHORT_NAME: string = cons.SERVICE_NAME.ecs.service.short;
 
   public readonly test: CfnService;
 

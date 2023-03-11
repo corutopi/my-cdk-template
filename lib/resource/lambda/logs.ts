@@ -1,6 +1,5 @@
 import { CfnLogGroup } from 'aws-cdk-lib/aws-logs';
-import * as cdk from 'aws-cdk-lib';
-import * as crypto from 'crypto';
+import * as cons from '../../constant';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
 import { LambdaFunction } from './lambda-function';
@@ -20,8 +19,8 @@ interface ResourceInfo {
  * Logs を生成するリソースクラス
  */
 export class Logs extends BaseResource {
-  public readonly SERVICE_FULL_NAME: string = 'Logs';
-  public readonly SERVICE_SHORT_NAME: string = 'logs';
+  public readonly SERVICE_FULL_NAME: string = cons.SERVICE_NAME.cloudWatch.logs.full;
+  public readonly SERVICE_SHORT_NAME: string = cons.SERVICE_NAME.cloudWatch.logs.short;
 
   public readonly main: CfnLogGroup;
 

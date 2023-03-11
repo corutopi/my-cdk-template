@@ -4,6 +4,7 @@ import { BaseResource, BaseProps } from '../abstruct/base-resource';
 import { SecurityGroup } from './security-group';
 import { TargetGroup } from './target-group';
 import { Subnet } from '../network/subnet';
+import * as cons from '../../constant';
 
 interface ResourceProps {
   readonly subnet: Subnet;
@@ -34,8 +35,8 @@ interface ResourceInfo {
  * ApplicationLoadBalancer を生成するリソースクラス
  */
 export class ApplicationLoadBalancer extends BaseResource {
-  public readonly SERVICE_FULL_NAME: string = 'application-load-balancer';
-  public readonly SERVICE_SHORT_NAME: string = 'alb';
+  public readonly SERVICE_FULL_NAME: string = cons.SERVICE_NAME.elb.alb.full;
+  public readonly SERVICE_SHORT_NAME: string = cons.SERVICE_NAME.elb.alb.short;
 
   public readonly test: CfnLoadBalancer;
   public readonly testListener80: CfnListener;

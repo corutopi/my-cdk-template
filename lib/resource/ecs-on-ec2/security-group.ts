@@ -2,6 +2,7 @@ import { CfnSecurityGroup, CfnSecurityGroupIngress } from 'aws-cdk-lib/aws-ec2';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
 import { Vpc } from '../network/vpc';
+import * as cons from '../../constant';
 
 interface ResourceProps {
   vpc: Vpc;
@@ -29,8 +30,8 @@ interface ResourceInfo {
  * SecurityGroup を生成するリソースクラス
  */
 export class SecurityGroup extends BaseResource {
-  public readonly SERVICE_FULL_NAME: string = 'SecurityGroup';
-  public readonly SERVICE_SHORT_NAME: string = 'sg';
+  public readonly SERVICE_FULL_NAME: string = cons.SERVICE_NAME.ec2.secrityGroup.full;
+  public readonly SERVICE_SHORT_NAME: string = cons.SERVICE_NAME.ec2.secrityGroup.short;
 
   public readonly ssh: CfnSecurityGroup;
   public readonly alb: CfnSecurityGroup;

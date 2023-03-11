@@ -7,6 +7,7 @@ import { EcsCluster } from './ecs-cluster';
 import { EcsService } from './ecs-service';
 import { ApplicationLoadBalancer } from './application-load-balancer';
 import { TargetGroup } from './target-group';
+import * as cons from '../../constant';
 
 interface ResourceProps {
   codeDeployApplication: CodeDeployApplication;
@@ -26,8 +27,8 @@ interface ResourceInfo {
  * EcsCluster を生成するリソースクラス
  */
 export class CodeDeployDeploymentGroup extends BaseResource {
-  public readonly SERVICE_FULL_NAME: string = 'CodeDeployDeploymentGroup';
-  public readonly SERVICE_SHORT_NAME: string = 'group';
+  public readonly SERVICE_FULL_NAME: string = cons.SERVICE_NAME.codeDeploy.deploymentGroup.full;
+  public readonly SERVICE_SHORT_NAME: string = cons.SERVICE_NAME.codeDeploy.deploymentGroup.short;
 
   public readonly test: CfnDeploymentGroup;
 

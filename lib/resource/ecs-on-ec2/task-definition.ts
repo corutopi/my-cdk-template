@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { CfnTaskDefinition } from 'aws-cdk-lib/aws-ecs';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import * as cons from '../../constant';
 
 interface ResourceInfo {
   readonly originName: string;
@@ -13,8 +14,8 @@ interface ResourceInfo {
  * EcsCluster を生成するリソースクラス
  */
 export class TaskDefinition extends BaseResource {
-  public readonly SERVICE_FULL_NAME: string = 'task-definition';
-  public readonly SERVICE_SHORT_NAME: string = 'task';
+  public readonly SERVICE_FULL_NAME: string = cons.SERVICE_NAME.ecs.taskDefinition.full;
+  public readonly SERVICE_SHORT_NAME: string = cons.SERVICE_NAME.ecs.taskDefinition.short;
 
   public readonly test: CfnTaskDefinition;
 

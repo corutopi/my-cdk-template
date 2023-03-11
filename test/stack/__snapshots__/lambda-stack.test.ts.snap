@@ -10,6 +10,13 @@ Object {
     },
   },
   "Resources": Object {
+    "CloudWatchLogsMain": Object {
+      "Properties": Object {
+        "LogGroupName": "/aws/lambda/cdktest-dev-test-func",
+        "RetentionInDays": 90,
+      },
+      "Type": "AWS::Logs::LogGroup",
+    },
     "IamRoleTestFunction": Object {
       "Properties": Object {
         "AssumeRolePolicyDocument": Object {
@@ -71,13 +78,6 @@ Object {
       },
       "Type": "AWS::Lambda::Version",
       "UpdateReplacePolicy": "Retain",
-    },
-    "LogsMain": Object {
-      "Properties": Object {
-        "LogGroupName": "/aws/lambda/cdktest-dev-test-func",
-        "RetentionInDays": 90,
-      },
-      "Type": "AWS::Logs::LogGroup",
     },
   },
   "Rules": Object {
