@@ -11,7 +11,7 @@ import * as tc from '../test-constant';
  */
 function createTestTemplate(): Template {
   const app = new cdk.App({ context: tc.CONTEXT });
-  const stack = new NetworkStack(app, 'TestStack');
+  const stack = new NetworkStack({ scope: app, id: 'network' });
   const template = Template.fromStack(stack);
   return template;
 }

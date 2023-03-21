@@ -41,4 +41,7 @@ export const SERVICE_NAME = {
   cloudWatch: {
     logs: { full: 'CloudWatchLogs', short: 'logs' },
   },
+  cloudFromation: {
+    stack: { full: 'CfnStack', short: 'stack' },
+  },
 };
