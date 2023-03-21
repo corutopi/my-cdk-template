@@ -12,13 +12,6 @@ const f = fs.existsSync(LOCAL_SETTING) ? JSON.parse(fs.readFileSync(LOCAL_SETTIN
 
 const app = new cdk.App({ postCliContext: f });
 
-const networkStack = new NetworkStack({
-  id: 'network',
-  scope: app,
-});
-const lambdaStack = new LambdakStack(app, 'LambdaStack', {
-  stackName: 'lambda-stack',
-});
-const ecsOnEc2Stack = new EcsOnEc2Stack(app, 'EcsOnEc2Stack', networkStack, {
-  stackName: 'ecs-on-ec2-stack',
-});
+const networkStack = new NetworkStack({ id: 'network', scope: app });
+const lambdaStack = new LambdakStack({ id: 'lambda', scope: app });
+const ecsOnEc2Stack = new EcsOnEc2Stack({ id: 'ecs-on-ec2', scope: app }, { networkStack });

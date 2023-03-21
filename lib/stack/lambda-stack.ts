@@ -1,6 +1,4 @@
-import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-
+import { BaseStack, BaseStackProps } from './abstruct/base-stack';
 import { IamRole } from '../resource/lambda/iam-role';
 import { LambdaFunction } from '../resource/lambda/lambda-function';
 import { Logs } from '../resource/lambda/logs';
@@ -8,13 +6,13 @@ import { Logs } from '../resource/lambda/logs';
 /**
  * LambdakStack を作成するクラス.
  */
-export class LambdakStack extends cdk.Stack {
+export class LambdakStack extends BaseStack {
   public readonly iamRole: IamRole;
   public readonly lambdaFunction: LambdaFunction;
   public readonly logs: Logs;
 
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+  constructor(parentProps: BaseStackProps) {
+    super(parentProps);
 
     this.iamRole = new IamRole({ scope: this });
     this.lambdaFunction = new LambdaFunction({ scope: this }, { iamRole: this.iamRole });

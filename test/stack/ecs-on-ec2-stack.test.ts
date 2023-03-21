@@ -13,7 +13,7 @@ import * as tc from '../test-constant';
 function createTestTemplate(): Template {
   const app = new cdk.App({ context: tc.CONTEXT });
   const networkStack = new NetworkStack({ scope: app, id: 'network' });
-  const stack = new EcsOnEc2Stack(app, 'TestStack', networkStack);
+  const stack = new EcsOnEc2Stack({ scope: app, id: 'ecs-on-ec2' }, { networkStack });
   const template = Template.fromStack(stack);
   return template;
 }

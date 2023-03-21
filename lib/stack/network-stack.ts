@@ -1,6 +1,3 @@
-import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-
 import { BaseStack, BaseStackProps } from './abstruct/base-stack';
 import { Vpc } from '../resource/network/vpc';
 import { Subnet } from '../resource/network/subnet';
