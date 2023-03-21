@@ -1,0 +1,609 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot: LambdaStackSnapshot 1`] = `
+Object {
+  "Mappings": Object {
+    "ServiceprincipalMap": Object {
+      "af-south-1": Object {
+        "codedeploy": "codedeploy.af-south-1.amazonaws.com",
+      },
+      "ap-east-1": Object {
+        "codedeploy": "codedeploy.ap-east-1.amazonaws.com",
+      },
+      "ap-northeast-1": Object {
+        "codedeploy": "codedeploy.ap-northeast-1.amazonaws.com",
+      },
+      "ap-northeast-2": Object {
+        "codedeploy": "codedeploy.ap-northeast-2.amazonaws.com",
+      },
+      "ap-northeast-3": Object {
+        "codedeploy": "codedeploy.ap-northeast-3.amazonaws.com",
+      },
+      "ap-south-1": Object {
+        "codedeploy": "codedeploy.ap-south-1.amazonaws.com",
+      },
+      "ap-southeast-1": Object {
+        "codedeploy": "codedeploy.ap-southeast-1.amazonaws.com",
+      },
+      "ap-southeast-2": Object {
+        "codedeploy": "codedeploy.ap-southeast-2.amazonaws.com",
+      },
+      "ap-southeast-3": Object {
+        "codedeploy": "codedeploy.ap-southeast-3.amazonaws.com",
+      },
+      "ca-central-1": Object {
+        "codedeploy": "codedeploy.ca-central-1.amazonaws.com",
+      },
+      "cn-north-1": Object {
+        "codedeploy": "codedeploy.cn-north-1.amazonaws.com.cn",
+      },
+      "cn-northwest-1": Object {
+        "codedeploy": "codedeploy.cn-northwest-1.amazonaws.com.cn",
+      },
+      "eu-central-1": Object {
+        "codedeploy": "codedeploy.eu-central-1.amazonaws.com",
+      },
+      "eu-north-1": Object {
+        "codedeploy": "codedeploy.eu-north-1.amazonaws.com",
+      },
+      "eu-south-1": Object {
+        "codedeploy": "codedeploy.eu-south-1.amazonaws.com",
+      },
+      "eu-south-2": Object {
+        "codedeploy": "codedeploy.eu-south-2.amazonaws.com",
+      },
+      "eu-west-1": Object {
+        "codedeploy": "codedeploy.eu-west-1.amazonaws.com",
+      },
+      "eu-west-2": Object {
+        "codedeploy": "codedeploy.eu-west-2.amazonaws.com",
+      },
+      "eu-west-3": Object {
+        "codedeploy": "codedeploy.eu-west-3.amazonaws.com",
+      },
+      "me-south-1": Object {
+        "codedeploy": "codedeploy.me-south-1.amazonaws.com",
+      },
+      "sa-east-1": Object {
+        "codedeploy": "codedeploy.sa-east-1.amazonaws.com",
+      },
+      "us-east-1": Object {
+        "codedeploy": "codedeploy.us-east-1.amazonaws.com",
+      },
+      "us-east-2": Object {
+        "codedeploy": "codedeploy.us-east-2.amazonaws.com",
+      },
+      "us-gov-east-1": Object {
+        "codedeploy": "codedeploy.us-gov-east-1.amazonaws.com",
+      },
+      "us-gov-west-1": Object {
+        "codedeploy": "codedeploy.us-gov-west-1.amazonaws.com",
+      },
+      "us-iso-east-1": Object {
+        "codedeploy": "codedeploy.amazonaws.com",
+      },
+      "us-iso-west-1": Object {
+        "codedeploy": "codedeploy.amazonaws.com",
+      },
+      "us-isob-east-1": Object {
+        "codedeploy": "codedeploy.amazonaws.com",
+      },
+      "us-west-1": Object {
+        "codedeploy": "codedeploy.us-west-1.amazonaws.com",
+      },
+      "us-west-2": Object {
+        "codedeploy": "codedeploy.us-west-2.amazonaws.com",
+      },
+    },
+  },
+  "Parameters": Object {
+    "BootstrapVersion": Object {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": Object {
+    "ApplicationLoadBalancerListenerBluePort": Object {
+      "Properties": Object {
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "TargetGroupTest1",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Ref": "ApplicationLoadBalancerTest",
+        },
+        "Port": 80,
+        "Protocol": "HTTP",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "ApplicationLoadBalancerListenerGreenPort": Object {
+      "Properties": Object {
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "TargetGroupTest2",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Ref": "ApplicationLoadBalancerTest",
+        },
+        "Port": 8080,
+        "Protocol": "HTTP",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "ApplicationLoadBalancerTest": Object {
+      "Properties": Object {
+        "Name": "cdktest-dev-test-alb",
+        "SecurityGroups": Array [
+          Object {
+            "Fn::GetAtt": Array [
+              "SecurityGroupAlb",
+              "GroupId",
+            ],
+          },
+        ],
+        "Subnets": Array [
+          Object {
+            "Fn::ImportValue": "cdktest-dev-network-stack:ExportsOutputFnGetAttSubnetPublicASubnetId1651028C",
+          },
+          Object {
+            "Fn::ImportValue": "cdktest-dev-network-stack:ExportsOutputFnGetAttSubnetPublicCSubnetId6862C030",
+          },
+        ],
+        "Type": "application",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+    },
+    "CodeDeployApplicationTest": Object {
+      "Properties": Object {
+        "ApplicationName": "cdktest-dev-test-application",
+        "ComputePlatform": "ECS",
+      },
+      "Type": "AWS::CodeDeploy::Application",
+    },
+    "CodeDeployDeploymentGroupTest": Object {
+      "Properties": Object {
+        "ApplicationName": "cdktest-dev-test-application",
+        "AutoRollbackConfiguration": Object {
+          "Enabled": true,
+          "Events": Array [
+            "DEPLOYMENT_FAILURE",
+            "DEPLOYMENT_STOP_ON_REQUEST",
+          ],
+        },
+        "BlueGreenDeploymentConfiguration": Object {
+          "DeploymentReadyOption": Object {
+            "ActionOnTimeout": "STOP_DEPLOYMENT",
+            "WaitTimeInMinutes": 60,
+          },
+          "TerminateBlueInstancesOnDeploymentSuccess": Object {
+            "Action": "TERMINATE",
+            "TerminationWaitTimeInMinutes": 60,
+          },
+        },
+        "DeploymentConfigName": "CodeDeployDefault.ECSAllAtOnce",
+        "DeploymentGroupName": "cdktest-dev-test-group",
+        "DeploymentStyle": Object {
+          "DeploymentOption": "WITH_TRAFFIC_CONTROL",
+          "DeploymentType": "BLUE_GREEN",
+        },
+        "ECSServices": Array [
+          Object {
+            "ClusterName": "cdktest-dev-test-cluster",
+            "ServiceName": Object {
+              "Fn::GetAtt": Array [
+                "EcsServiceTest",
+                "Name",
+              ],
+            },
+          },
+        ],
+        "LoadBalancerInfo": Object {
+          "TargetGroupPairInfoList": Array [
+            Object {
+              "ProdTrafficRoute": Object {
+                "ListenerArns": Array [
+                  Object {
+                    "Fn::GetAtt": Array [
+                      "ApplicationLoadBalancerListenerBluePort",
+                      "ListenerArn",
+                    ],
+                  },
+                ],
+              },
+              "TargetGroups": Array [
+                Object {
+                  "Name": Object {
+                    "Fn::GetAtt": Array [
+                      "TargetGroupTest1",
+                      "TargetGroupName",
+                    ],
+                  },
+                },
+                Object {
+                  "Name": Object {
+                    "Fn::GetAtt": Array [
+                      "TargetGroupTest2",
+                      "TargetGroupName",
+                    ],
+                  },
+                },
+              ],
+              "TestTrafficRoute": Object {
+                "ListenerArns": Array [
+                  Object {
+                    "Fn::GetAtt": Array [
+                      "ApplicationLoadBalancerListenerGreenPort",
+                      "ListenerArn",
+                    ],
+                  },
+                ],
+              },
+            },
+          ],
+        },
+        "OutdatedInstancesStrategy": "UPDATE",
+        "ServiceRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "IamRoleForEcsCodeDeploy",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::CodeDeploy::DeploymentGroup",
+    },
+    "EC2InstanceEcs": Object {
+      "DependsOn": Array [
+        "EcsClusterTest",
+      ],
+      "Properties": Object {
+        "IamInstanceProfile": Object {
+          "Ref": "IamRoleInstanceProfileForEcs",
+        },
+        "ImageId": "ami-0a32d9b36af77b72e",
+        "InstanceType": "t3a.small",
+        "KeyName": "my-key",
+        "SecurityGroupIds": Array [
+          Object {
+            "Fn::GetAtt": Array [
+              "SecurityGroupEcs",
+              "GroupId",
+            ],
+          },
+          Object {
+            "Fn::GetAtt": Array [
+              "SecurityGroupSsh",
+              "GroupId",
+            ],
+          },
+        ],
+        "SubnetId": Object {
+          "Fn::ImportValue": "cdktest-dev-network-stack:ExportsOutputRefSubnetPublicAE81C4B4C",
+        },
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "cdktest-dev-ecs-ins",
+          },
+        ],
+        "UserData": "IyEvYmluL2Jhc2gKCiMganEg44Kk44Oz44K544OI44O844OrCnl1bSAteSBpbnN0YWxsIGpxCgojIOOCpOODs+OCueOCv+ODs+OCueWQjeOCkuOCv+OCsOWQjeOBq+WkieabtAphd3MgZWMyIGRlc2NyaWJlLWluc3RhbmNlcyBcCiAgICAtLXF1ZXJ5ICdSZXNlcnZhdGlvbnNbXS5JbnN0YW5jZXNbXS57TmFtZTpUYWdzWz9LZXk9PWBOYW1lYF0uVmFsdWV9JyBcCiAgICAtLWZpbHRlciAiTmFtZT1pbnN0YW5jZS1pZCxWYWx1ZXM9YGN1cmwgLXMgJ2h0dHA6Ly8xNjkuMjU0LjE2OS4yNTQvbGF0ZXN0L21ldGEtZGF0YS9pbnN0YW5jZS1pZCdgIiBcCiAgICAtLXJlZ2lvbiBgY3VybCAtcyBodHRwOi8vMTY5LjI1NC4xNjkuMjU0L2xhdGVzdC9tZXRhLWRhdGEvcGxhY2VtZW50L2F2YWlsYWJpbGl0eS16b25lIHwgc2VkIC1lICdzLy4kLy8nYCBcCiAgfCBob3N0bmFtZWN0bCBzZXQtaG9zdG5hbWUgYGpxIC1yIC5bMF0uTmFtZVswXWAKCiMg44Kv44Op44K544K/44O85oyH5a6aCmVjaG8gRUNTX0NMVVNURVI9J2Nka3Rlc3QtZGV2LXRlc3QtY2x1c3RlcicgPj4gL2V0Yy9lY3MvZWNzLmNvbmZpZwo=",
+      },
+      "Type": "AWS::EC2::Instance",
+    },
+    "EcsClusterTest": Object {
+      "Properties": Object {
+        "ClusterName": "cdktest-dev-test-cluster",
+        "ClusterSettings": Array [
+          Object {
+            "Name": "containerInsights",
+            "Value": "enabled",
+          },
+        ],
+      },
+      "Type": "AWS::ECS::Cluster",
+    },
+    "EcsServiceTest": Object {
+      "DependsOn": Array [
+        "ApplicationLoadBalancerListenerBluePort",
+        "ApplicationLoadBalancerListenerGreenPort",
+        "ApplicationLoadBalancerTest",
+      ],
+      "Properties": Object {
+        "Cluster": Object {
+          "Fn::GetAtt": Array [
+            "EcsClusterTest",
+            "Arn",
+          ],
+        },
+        "DeploymentController": Object {
+          "Type": "CODE_DEPLOY",
+        },
+        "DesiredCount": 1,
+        "LoadBalancers": Array [
+          Object {
+            "ContainerName": "httpd-test",
+            "ContainerPort": 80,
+            "TargetGroupArn": Object {
+              "Ref": "TargetGroupTest1",
+            },
+          },
+        ],
+        "ServiceName": "test-service-2",
+        "TaskDefinition": "cdktest-dev-test-task:6",
+      },
+      "Type": "AWS::ECS::Service",
+    },
+    "EcsTaskDefinitionTest": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Command": Array [
+              "/bin/sh -c \\"echo '<html> <head> <title>Amazon ECS Sample App</title> <style>body {margin-top: 40px; background-color: #333;} </style> </head><body> <div style=color:white;text-align:center> <h1>Amazon ECS Sample App</h1> <h2>Congratulations!</h2> <p>Your application is now running on a container in Amazon ECS.</p> </div></body></html>' >  /usr/local/apache2/htdocs/index.html && httpd-foreground\\"",
+            ],
+            "EntryPoint": Array [
+              "sh",
+              "-c",
+            ],
+            "Image": "httpd:2.4",
+            "MemoryReservation": 128,
+            "Name": "httpd-test",
+            "PortMappings": Array [
+              Object {
+                "ContainerPort": 80,
+                "HostPort": 0,
+                "Protocol": "tcp",
+              },
+            ],
+          },
+        ],
+        "Family": "cdktest-dev-test-task",
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "IamRoleForEcs": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "ec2.",
+                      Object {
+                        "Ref": "AWS::URLSuffix",
+                      },
+                    ],
+                  ],
+                },
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          "arn:aws:iam::aws:policy/AmazonECS_FullAccess",
+          "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
+        ],
+        "RoleName": "cdktest-dev-for-ecs-role",
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "IamRoleForEcsCodeDeploy": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": Object {
+                  "Fn::FindInMap": Array [
+                    "ServiceprincipalMap",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    "codedeploy",
+                  ],
+                },
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          "arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS",
+        ],
+        "RoleName": "cdktest-dev-for-ecs-code-deploy-role",
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "IamRoleInstanceProfileForEcs": Object {
+      "Properties": Object {
+        "InstanceProfileName": "cdktest-dev-for-ecs-role",
+        "Roles": Array [
+          Object {
+            "Ref": "IamRoleForEcs",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::InstanceProfile",
+    },
+    "SecurityGroupAlb": Object {
+      "Properties": Object {
+        "GroupDescription": "for alb.",
+        "GroupName": "cdktest-dev-alb-sg",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "cdktest-dev-alb-sg",
+          },
+        ],
+        "VpcId": Object {
+          "Fn::ImportValue": "cdktest-dev-network-stack:ExportsOutputRefVpcMain259730FF",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "SecurityGroupEcs": Object {
+      "Properties": Object {
+        "GroupDescription": "for ecs server.",
+        "GroupName": "cdktest-dev-ecs-sg",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "cdktest-dev-ecs-sg",
+          },
+        ],
+        "VpcId": Object {
+          "Fn::ImportValue": "cdktest-dev-network-stack:ExportsOutputRefVpcMain259730FF",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "SecurityGroupIngressAlbForBlueGreenHttp": Object {
+      "Properties": Object {
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": 8080,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "SecurityGroupAlb",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 8080,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "SecurityGroupIngressAlbHttp": Object {
+      "Properties": Object {
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": 80,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "SecurityGroupAlb",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 80,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "SecurityGroupIngressEcsHttp": Object {
+      "Properties": Object {
+        "CidrIp": "10.10.0.0/16",
+        "FromPort": 49153,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "SecurityGroupEcs",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 65535,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "SecurityGroupIngressSshAllIp": Object {
+      "Properties": Object {
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": 22,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "SecurityGroupSsh",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 22,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "SecurityGroupSsh": Object {
+      "Properties": Object {
+        "GroupDescription": "allow ssh access.",
+        "GroupName": "cdktest-dev-ssh-sg",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "cdktest-dev-ssh-sg",
+          },
+        ],
+        "VpcId": Object {
+          "Fn::ImportValue": "cdktest-dev-network-stack:ExportsOutputRefVpcMain259730FF",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "TargetGroupTest1": Object {
+      "Properties": Object {
+        "HealthCheckPath": "/index.html",
+        "Name": "cdktest-dev-test1-tg",
+        "Port": 80,
+        "Protocol": "HTTP",
+        "TargetType": "instance",
+        "VpcId": Object {
+          "Fn::ImportValue": "cdktest-dev-network-stack:ExportsOutputRefVpcMain259730FF",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "TargetGroupTest2": Object {
+      "Properties": Object {
+        "HealthCheckPath": "/index.html",
+        "Name": "cdktest-dev-test2-tg",
+        "Port": 8080,
+        "Protocol": "HTTP",
+        "TargetType": "instance",
+        "VpcId": Object {
+          "Fn::ImportValue": "cdktest-dev-network-stack:ExportsOutputRefVpcMain259730FF",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+  },
+  "Rules": Object {
+    "CheckBootstrapVersion": Object {
+      "Assertions": Array [
+        Object {
+          "Assert": Object {
+            "Fn::Not": Array [
+              Object {
+                "Fn::Contains": Array [
+                  Array [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  Object {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
