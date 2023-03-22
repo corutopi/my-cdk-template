@@ -10,9 +10,9 @@ interface LogsProps {
 
 interface ResourceInfo {
   originName: string;
-  functionName: (lf: LambdaFunction) => string;
+  functionName: string;
   retentionInDays: number;
-  assign: (logs: Logs, cfnLogGroup: CfnLogGroup) => void;
+  assign: (cfnLogGroup: CfnLogGroup) => void;
 }
 
 /**
@@ -25,22 +25,25 @@ export class Logs extends BaseResource {
   public readonly main: CfnLogGroup;
 
   private readonly lambdaFunction: LambdaFunction;
-  private readonly resourceList: ResourceInfo[] = [
-    {
-      originName: 'main',
-      functionName: (lf) => lf.main.functionName as string,
-      retentionInDays: 90,
-      assign: (logs, cfnLogGroup) => ((logs.main as CfnLogGroup) = cfnLogGroup),
-    },
-  ];
+
+  private createResourceList(): ResourceInfo[] {
+    return [
+      {
+        originName: 'main',
+        functionName: this.lambdaFunction.main.functionName as string,
+        retentionInDays: 90,
+        assign: (cfnLogGroup) => ((this.main as CfnLogGroup) = cfnLogGroup),
+      },
+    ];
+  }
 
   constructor(parentProps: BaseProps, logsProps: LogsProps) {
     super(parentProps);
 
     this.lambdaFunction = logsProps.lambdaFunction;
 
-    for (const resourceInfo of this.resourceList) {
-      resourceInfo.assign(this, this.createLogGroup(resourceInfo));
+    for (const resourceInfo of this.createResourceList()) {
+      resourceInfo.assign(this.createLogGroup(resourceInfo));
     }
   }
 
@@ -52,7 +55,7 @@ export class Logs extends BaseResource {
    */
   private createLogGroup(resourceInfo: ResourceInfo): CfnLogGroup {
     return new CfnLogGroup(this.scope, this.createLogicalId(resourceInfo.originName), {
-      logGroupName: `/aws/lambda/${resourceInfo.functionName(this.lambdaFunction)}`,
+      logGroupName: `/aws/lambda/${resourceInfo.functionName}`,
       retentionInDays: resourceInfo.retentionInDays,
     });
   }

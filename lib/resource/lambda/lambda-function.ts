@@ -22,13 +22,13 @@ interface AliasInfo {
 
 interface ResourceInfo {
   code: CodeInfo;
-  role: (role: IamRole) => string;
+  role: string;
   originName: string;
   handler: string;
   runtime: string;
   aliases: AliasInfo[];
   versionComment?: string;
-  assign: (func: LambdaFunction, cfnFunction: CfnFunction) => void;
+  assign: (cfnFunction: CfnFunction) => void;
 }
 
 /**
@@ -41,34 +41,32 @@ export class LambdaFunction extends BaseResource {
   public readonly main: CfnFunction;
 
   private readonly iamRole: IamRole;
-  private readonly resourceList: ResourceInfo[] = [
-    {
-      code: {
-        s3Bucket: this.context.resourceBucket,
-        s3Key: 'test-function.zip',
-      },
-      role: (iamRole) => iamRole.testFunction.attrArn,
-      originName: 'test',
-      handler: 'lambda_function.lambda_handler',
-      runtime: 'python3.8',
-      aliases: [
-        {
-          name: 'InService',
-          version: '$LATEST',
+
+  private createResourceList(): ResourceInfo[] {
+    return [
+      {
+        code: {
+          s3Bucket: this.context.resourceBucket,
+          s3Key: 'test-function.zip',
         },
-      ],
-      versionComment: 'When the version changes, the comments must also change.',
-      assign: (func, cfnFunction) => ((func.main as CfnFunction) = cfnFunction),
-    },
-  ];
+        role: this.iamRole.testFunction.attrArn,
+        originName: 'test',
+        handler: 'lambda_function.lambda_handler',
+        runtime: 'python3.8',
+        aliases: [{ name: 'InService', version: '$LATEST' }],
+        versionComment: 'When the version changes, the comments must also change.',
+        assign: (cfnFunction) => ((this.main as CfnFunction) = cfnFunction),
+      },
+    ];
+  }
 
   constructor(parentProps: BaseProps, funcProps: LambdaFunctionProps) {
     super(parentProps);
 
     this.iamRole = funcProps.iamRole;
 
-    for (const resourceInfo of this.resourceList) {
-      resourceInfo.assign(this, this.createFunction(resourceInfo));
+    for (const resourceInfo of this.createResourceList()) {
+      resourceInfo.assign(this.createFunction(resourceInfo));
     }
   }
 
@@ -87,7 +85,7 @@ export class LambdaFunction extends BaseResource {
           s3Bucket: resourceInfo.code.s3Bucket,
           s3Key: resourceInfo.code.s3Key,
         },
-        role: resourceInfo.role(this.iamRole),
+        role: resourceInfo.role,
         functionName: this.createResourceName(resourceInfo.originName),
         handler: resourceInfo.handler,
         runtime: resourceInfo.runtime,

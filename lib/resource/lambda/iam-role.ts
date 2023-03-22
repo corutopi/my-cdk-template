@@ -18,7 +18,7 @@ interface ResourceInfo {
   originName: string;
   policyStatementProps: PolicyStatementProps;
   managedPolicyArns: string[];
-  assign: (role: IamRole, iamRole: CfnRole) => void;
+  assign: (iamRole: CfnRole) => void;
 }
 
 /**
@@ -30,24 +30,26 @@ export class IamRole extends BaseResource {
 
   public readonly testFunction: CfnRole;
 
-  private readonly resourceList: ResourceInfo[] = [
-    {
-      originName: 'test-function',
-      policyStatementProps: {
-        effect: Effect.ALLOW,
-        principals: [new ServicePrincipal('lambda.amazonaws.com')],
-        actions: ['sts:AssumeRole'],
+  private createResourceList(): ResourceInfo[] {
+    return [
+      {
+        originName: 'test-function',
+        policyStatementProps: {
+          effect: Effect.ALLOW,
+          principals: [new ServicePrincipal('lambda.amazonaws.com')],
+          actions: ['sts:AssumeRole'],
+        },
+        managedPolicyArns: ['arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'],
+        assign: (iamRole) => ((this.testFunction as CfnRole) = iamRole),
       },
-      managedPolicyArns: ['arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'],
-      assign: (role, iamRole) => ((role.testFunction as CfnRole) = iamRole),
-    },
-  ];
+    ];
+  }
 
   constructor(parentProps: BaseProps) {
     super(parentProps);
 
-    for (const resourceInfo of this.resourceList) {
-      resourceInfo.assign(this, this.createIamRole(resourceInfo));
+    for (const resourceInfo of this.createResourceList()) {
+      resourceInfo.assign(this.createIamRole(resourceInfo));
     }
   }
 
