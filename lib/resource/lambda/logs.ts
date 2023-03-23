@@ -26,7 +26,7 @@ export class Logs extends BaseResource {
 
   private readonly lambdaFunction: LambdaFunction;
 
-  private createResourceList(): ResourceInfo[] {
+  protected createResourceList(): ResourceInfo[] {
     return [
       {
         originName: 'main',

@@ -21,7 +21,7 @@ interface RouteTableProps {
 interface RouteInfo {
   originName: string;
   destinationCidrBlock: string;
-  gatewayId: (rt: RouteTable) => string;
+  gatewayId: string;
 }
 
 /**
@@ -29,7 +29,7 @@ interface RouteInfo {
  */
 interface SubnetRouteTableAssociationInfo {
   originName: string;
-  subnetId: (rt: RouteTable) => string;
+  subnetId: string;
 }
 
 /**
@@ -65,44 +65,46 @@ export class RouteTable extends BaseResource {
   private readonly vpc: Vpc;
   private readonly igw: InternetGateway;
   private readonly subnet: Subnet;
-  private readonly resourceList: ResourceInfo[] = [
-    {
-      originName: 'public-common',
-      routeList: [
-        {
-          originName: 'PublicRouteCommon',
-          destinationCidrBlock: '0.0.0.0/0',
-          gatewayId: (rt) => rt.igw.main.ref,
-        },
-      ],
-      associationList: [
-        {
-          originName: 'SubnetAssociationPublicA',
-          subnetId: (rt) => rt.subnet.publicA.ref,
-        },
-        {
-          originName: 'SubnetAssociationPublicC',
-          subnetId: (rt) => rt.subnet.publicC.ref,
-        },
-      ],
-      assign: (rt, routeTable) => ((rt.publicCommon as CfnRouteTable) = routeTable),
-    },
-    {
-      originName: 'private-common',
-      routeList: [],
-      associationList: [
-        {
-          originName: 'SubnetAssociationPrivateA',
-          subnetId: (rt) => rt.subnet.privateA.ref,
-        },
-        {
-          originName: 'SubnetAssociationPrivateC',
-          subnetId: (rt) => rt.subnet.privateC.ref,
-        },
-      ],
-      assign: (rt, routeTable) => ((rt.publicCommon as CfnRouteTable) = routeTable),
-    },
-  ];
+  protected createResourceList(): ResourceInfo[] {
+    return [
+      {
+        originName: 'public-common',
+        routeList: [
+          {
+            originName: 'PublicRouteCommon',
+            destinationCidrBlock: '0.0.0.0/0',
+            gatewayId: this.igw.main.ref,
+          },
+        ],
+        associationList: [
+          {
+            originName: 'SubnetAssociationPublicA',
+            subnetId: this.subnet.publicA.ref,
+          },
+          {
+            originName: 'SubnetAssociationPublicC',
+            subnetId: this.subnet.publicC.ref,
+          },
+        ],
+        assign: (rt, routeTable) => ((rt.publicCommon as CfnRouteTable) = routeTable),
+      },
+      {
+        originName: 'private-common',
+        routeList: [],
+        associationList: [
+          {
+            originName: 'SubnetAssociationPrivateA',
+            subnetId: this.subnet.privateA.ref,
+          },
+          {
+            originName: 'SubnetAssociationPrivateC',
+            subnetId: this.subnet.privateC.ref,
+          },
+        ],
+        assign: (rt, routeTable) => ((rt.publicCommon as CfnRouteTable) = routeTable),
+      },
+    ];
+  }
 
   constructor(parentProps: BaseProps, rtProps: RouteTableProps) {
     super(parentProps);
@@ -111,7 +113,7 @@ export class RouteTable extends BaseResource {
     this.subnet = rtProps.subent;
     this.igw = rtProps.internetGateway;
 
-    for (const resourceInfo of this.resourceList) {
+    for (const resourceInfo of this.createResourceList()) {
       resourceInfo.assign(this, this.createRouteTable(resourceInfo));
     }
   }
@@ -152,7 +154,7 @@ export class RouteTable extends BaseResource {
     new CfnRoute(this.scope, this.createLogicalId(routeInfo.originName), {
       routeTableId: rt.ref,
       destinationCidrBlock: routeInfo.destinationCidrBlock,
-      gatewayId: routeInfo.gatewayId(this),
+      gatewayId: routeInfo.gatewayId,
     });
   }
 
@@ -171,7 +173,7 @@ export class RouteTable extends BaseResource {
       this.createLogicalId(associationInfo.originName),
       {
         routeTableId: rt.ref,
-        subnetId: associationInfo.subnetId(this),
+        subnetId: associationInfo.subnetId,
       }
     );
   }

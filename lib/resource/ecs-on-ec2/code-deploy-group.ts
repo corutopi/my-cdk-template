@@ -39,12 +39,14 @@ export class CodeDeployDeploymentGroup extends BaseResource {
   private readonly alb: ApplicationLoadBalancer;
   private readonly tg: TargetGroup;
 
-  private readonly resourceList: ResourceInfo[] = [
-    {
-      originName: 'test',
-      assign: (cddg, cfnDg) => ((cddg.test as CfnDeploymentGroup) = cfnDg),
-    },
-  ];
+  protected createResourceList(): ResourceInfo[] {
+    return [
+      {
+        originName: 'test',
+        assign: (cddg, cfnDg) => ((cddg.test as CfnDeploymentGroup) = cfnDg),
+      },
+    ];
+  }
 
   constructor(parentProps: BaseProps, props: ResourceProps) {
     super(parentProps);
@@ -56,7 +58,7 @@ export class CodeDeployDeploymentGroup extends BaseResource {
     this.alb = props.alb;
     this.tg = props.tg;
 
-    for (const ri of this.resourceList) {
+    for (const ri of this.createResourceList()) {
       ri.assign(this, this.createDeploymentGroup(ri));
     }
   }

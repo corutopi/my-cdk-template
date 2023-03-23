@@ -29,12 +29,15 @@ export class EcsService extends BaseResource {
   private readonly tg: TargetGroup;
   private readonly alb: ApplicationLoadBalancer;
   private readonly cluster: EcsCluster;
-  private readonly resourceList: ResourceInfo[] = [
-    {
-      originName: 'test',
-      assign: (service, cfnService) => ((service.test as CfnService) = cfnService),
-    },
-  ];
+
+  protected createResourceList(): ResourceInfo[] {
+    return [
+      {
+        originName: 'test',
+        assign: (service, cfnService) => ((service.test as CfnService) = cfnService),
+      },
+    ];
+  }
 
   constructor(parentProps: BaseProps, props: ResourceProps) {
     super(parentProps);
@@ -43,7 +46,7 @@ export class EcsService extends BaseResource {
     this.alb = props.alb;
     this.cluster = props.cluster;
 
-    for (const ri of this.resourceList) {
+    for (const ri of this.createResourceList()) {
       ri.assign(this, this.createEcsService(ri));
     }
   }

@@ -14,7 +14,7 @@ interface ResourceInfo {
   readonly targetType: 'instance' | 'ip' | 'lambda' | 'alb';
   readonly port: number;
   readonly healthCheckPath: string;
-  readonly vpcId: (tg: TargetGroup) => string;
+  readonly vpcId: string;
   readonly assign: (tg: TargetGroup, cfnLb: CfnTargetGroup) => void;
 }
 
@@ -29,33 +29,36 @@ export class TargetGroup extends BaseResource {
   public readonly test2: CfnTargetGroup;
 
   private readonly vpc: Vpc;
-  private readonly resourceList: ResourceInfo[] = [
-    {
-      originName: 'test1',
-      protocol: 'HTTP',
-      targetType: 'instance',
-      port: 80,
-      healthCheckPath: '/index.html',
-      vpcId: (tg) => tg.vpc.main.ref,
-      assign: (tg, cfnLb) => ((tg.test1 as CfnTargetGroup) = cfnLb),
-    },
-    {
-      originName: 'test2',
-      protocol: 'HTTP',
-      targetType: 'instance',
-      port: 8080,
-      healthCheckPath: '/index.html',
-      vpcId: (tg) => tg.vpc.main.ref,
-      assign: (tg, cfnLb) => ((tg.test2 as CfnTargetGroup) = cfnLb),
-    },
-  ];
+
+  protected createResourceList(): ResourceInfo[] {
+    return [
+      {
+        originName: 'test1',
+        protocol: 'HTTP',
+        targetType: 'instance',
+        port: 80,
+        healthCheckPath: '/index.html',
+        vpcId: this.vpc.main.ref,
+        assign: (tg, cfnLb) => ((tg.test1 as CfnTargetGroup) = cfnLb),
+      },
+      {
+        originName: 'test2',
+        protocol: 'HTTP',
+        targetType: 'instance',
+        port: 8080,
+        healthCheckPath: '/index.html',
+        vpcId: this.vpc.main.ref,
+        assign: (tg, cfnLb) => ((tg.test2 as CfnTargetGroup) = cfnLb),
+      },
+    ];
+  }
 
   constructor(parentProps: BaseProps, tgProps: ResourceProps) {
     super(parentProps);
 
     this.vpc = tgProps.vpc;
 
-    for (const ri of this.resourceList) {
+    for (const ri of this.createResourceList()) {
       ri.assign(this, this.createLoadBalancer(ri));
     }
   }
@@ -67,7 +70,7 @@ export class TargetGroup extends BaseResource {
       protocol: ri.protocol,
       port: ri.port,
       healthCheckPath: ri.healthCheckPath,
-      vpcId: ri.vpcId(this),
+      vpcId: ri.vpcId,
     });
   }
 }

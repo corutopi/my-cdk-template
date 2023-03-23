@@ -18,18 +18,20 @@ export class EcsCluster extends BaseResource {
 
   public readonly test: CfnCluster;
 
-  private readonly resourceList: ResourceInfo[] = [
-    {
-      originName: 'test',
-      containerInsights: 'enabled',
-      assign: (cluster, cfnCluster) => ((cluster.test as CfnCluster) = cfnCluster),
-    },
-  ];
+  protected createResourceList(): ResourceInfo[] {
+    return [
+      {
+        originName: 'test',
+        containerInsights: 'enabled',
+        assign: (cluster, cfnCluster) => ((cluster.test as CfnCluster) = cfnCluster),
+      },
+    ];
+  }
 
   constructor(parentProps: BaseProps) {
     super(parentProps);
 
-    for (const ri of this.resourceList) {
+    for (const ri of this.createResourceList()) {
       ri.assign(this, this.createCluster(ri));
     }
   }

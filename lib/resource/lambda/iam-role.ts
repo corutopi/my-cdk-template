@@ -30,7 +30,7 @@ export class IamRole extends BaseResource {
 
   public readonly testFunction: CfnRole;
 
-  private createResourceList(): ResourceInfo[] {
+  protected createResourceList(): ResourceInfo[] {
     return [
       {
         originName: 'test-function',

@@ -17,17 +17,19 @@ export class CodeDeployApplication extends BaseResource {
 
   public readonly test: CfnApplication;
 
-  private readonly resourceList: ResourceInfo[] = [
-    {
-      originName: 'test',
-      assign: (cda, cfnApp) => ((cda.test as CfnApplication) = cfnApp),
-    },
-  ];
+  protected createResourceList(): ResourceInfo[] {
+    return [
+      {
+        originName: 'test',
+        assign: (cda, cfnApp) => ((cda.test as CfnApplication) = cfnApp),
+      },
+    ];
+  }
 
   constructor(parentProps: BaseProps) {
     super(parentProps);
 
-    for (const ri of this.resourceList) {
+    for (const ri of this.createResourceList()) {
       ri.assign(this, this.createApplication(ri));
     }
   }

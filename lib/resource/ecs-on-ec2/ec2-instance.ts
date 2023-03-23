@@ -21,12 +21,12 @@ interface ResourceInfo {
   readonly originName: string;
   readonly imageId: string;
   readonly keyName: string;
-  readonly iamInstanceProfile: (ins: Instance) => string;
+  readonly iamInstanceProfile: string;
   readonly instanceType: string;
-  readonly securityGroupIds: ((ins: Instance) => string)[];
-  readonly subnetId: (ins: Instance) => string;
+  readonly securityGroupIds: string[];
+  readonly subnetId: string;
   readonly userData: string;
-  readonly dependOn: ((ins: Instance) => CfnResource)[];
+  readonly dependOn: CfnResource[];
   readonly assign: (ins: Instance, cfnIns: CfnInstance) => void;
 }
 
@@ -43,20 +43,22 @@ export class Instance extends BaseResource {
   private readonly sg: SecurityGroup;
   private readonly subnet: Subnet;
   private readonly cluster: EcsCluster;
-  private readonly resourceList: ResourceInfo[] = [
-    {
-      originName: 'ecs',
-      imageId: 'ami-0a32d9b36af77b72e',
-      keyName: 'my-key',
-      iamInstanceProfile: (ins) => ins.role.forEcsInstanceProfile.ref,
-      instanceType: 't3a.small',
-      securityGroupIds: [(ins) => ins.sg.ecs.attrGroupId, (ins) => ins.sg.ssh.attrGroupId],
-      subnetId: (ins) => ins.subnet.publicA.ref,
-      userData: fs.readFileSync(`${__dirname}/user-data/user-data.sh`, 'base64'),
-      dependOn: [(ins) => ins.cluster.test as CfnResource],
-      assign: (ins, cfnIns) => ((ins.ecs as CfnInstance) = cfnIns),
-    },
-  ];
+  protected createResourceList(): ResourceInfo[] {
+    return [
+      {
+        originName: 'ecs',
+        imageId: 'ami-0a32d9b36af77b72e',
+        keyName: 'my-key',
+        iamInstanceProfile: this.role.forEcsInstanceProfile.ref,
+        instanceType: 't3a.small',
+        securityGroupIds: [this.sg.ecs.attrGroupId, this.sg.ssh.attrGroupId],
+        subnetId: this.subnet.publicA.ref,
+        userData: fs.readFileSync(`${__dirname}/user-data/user-data.sh`, 'base64'),
+        dependOn: [this.cluster.test as CfnResource],
+        assign: (ins, cfnIns) => ((ins.ecs as CfnInstance) = cfnIns),
+      },
+    ];
+  }
 
   constructor(parentProps: BaseProps, props: ResourceProps) {
     super(parentProps);
@@ -66,27 +68,24 @@ export class Instance extends BaseResource {
     this.subnet = props.subnet;
     this.cluster = props.cluster;
 
-    for (const ri of this.resourceList) {
+    for (const ri of this.createResourceList()) {
       ri.assign(this, this.createInstance(ri));
     }
   }
 
   private createInstance(ri: ResourceInfo): CfnInstance {
-    const securityGroupIds: string[] = [];
-    for (const sgi of ri.securityGroupIds) securityGroupIds.push(sgi(this));
-
     const ins = new CfnInstance(this.scope, this.createLogicalId(ri.originName), {
       imageId: ri.imageId,
       keyName: ri.keyName,
-      iamInstanceProfile: ri.iamInstanceProfile(this),
+      iamInstanceProfile: ri.iamInstanceProfile,
       instanceType: ri.instanceType,
-      securityGroupIds: securityGroupIds,
-      subnetId: ri.subnetId(this),
+      securityGroupIds: ri.securityGroupIds,
+      subnetId: ri.subnetId,
       userData: ri.userData,
       tags: [this.createNameTagProps(ri.originName)],
     });
 
-    for (const dependOn of ri.dependOn) ins.addDependsOn(dependOn(this));
+    for (const dependOn of ri.dependOn) ins.addDependsOn(dependOn);
 
     return ins;
   }

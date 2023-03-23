@@ -45,43 +45,46 @@ export class Subnet extends BaseResource {
   public readonly privateC: CfnSubnet;
 
   private readonly vpc: Vpc;
-  private readonly resourceList: ResourceInfo[] = [
-    {
-      originName: 'public-a',
-      cidrBlock: '10.10.1.0/24',
-      availabilityZone: 'ap-northeast-1a',
-      mapPublicIpOnLaunch: true,
-      assign: (s, subnet) => ((s.publicA as CfnSubnet) = subnet),
-    },
-    {
-      originName: 'public-c',
-      cidrBlock: '10.10.2.0/24',
-      availabilityZone: 'ap-northeast-1c',
-      mapPublicIpOnLaunch: true,
-      assign: (s, subnet) => ((s.publicC as CfnSubnet) = subnet),
-    },
-    {
-      originName: 'private-a',
-      cidrBlock: '10.10.11.0/24',
-      availabilityZone: 'ap-northeast-1a',
-      mapPublicIpOnLaunch: false,
-      assign: (s, subnet) => ((s.privateA as CfnSubnet) = subnet),
-    },
-    {
-      originName: 'private-c',
-      cidrBlock: '10.10.12.0/24',
-      availabilityZone: 'ap-northeast-1c',
-      mapPublicIpOnLaunch: false,
-      assign: (s, subnet) => ((s.privateC as CfnSubnet) = subnet),
-    },
-  ];
+
+  protected createResourceList(): ResourceInfo[] {
+    return [
+      {
+        originName: 'public-a',
+        cidrBlock: '10.10.1.0/24',
+        availabilityZone: 'ap-northeast-1a',
+        mapPublicIpOnLaunch: true,
+        assign: (s, subnet) => ((s.publicA as CfnSubnet) = subnet),
+      },
+      {
+        originName: 'public-c',
+        cidrBlock: '10.10.2.0/24',
+        availabilityZone: 'ap-northeast-1c',
+        mapPublicIpOnLaunch: true,
+        assign: (s, subnet) => ((s.publicC as CfnSubnet) = subnet),
+      },
+      {
+        originName: 'private-a',
+        cidrBlock: '10.10.11.0/24',
+        availabilityZone: 'ap-northeast-1a',
+        mapPublicIpOnLaunch: false,
+        assign: (s, subnet) => ((s.privateA as CfnSubnet) = subnet),
+      },
+      {
+        originName: 'private-c',
+        cidrBlock: '10.10.12.0/24',
+        availabilityZone: 'ap-northeast-1c',
+        mapPublicIpOnLaunch: false,
+        assign: (s, subnet) => ((s.privateC as CfnSubnet) = subnet),
+      },
+    ];
+  }
 
   constructor(parentProps: BaseProps, subnetProps: SubnetProps) {
     super(parentProps);
 
     this.vpc = subnetProps.vpc;
 
-    for (const resourceInfo of this.resourceList) {
+    for (const resourceInfo of this.createResourceList()) {
       resourceInfo.assign(this, this.createSubnet(resourceInfo));
     }
   }

@@ -42,40 +42,42 @@ export class IamRole extends BaseResource {
   public readonly forEcsCodeDeploy: CfnRole;
   public readonly forEcsInstanceProfile: CfnInstanceProfile;
 
-  private readonly resourceList: ResourceInfo[] = [
-    {
-      originName: 'for-ecs',
-      policyStatementProps: {
-        effect: Effect.ALLOW,
-        principals: [new ServicePrincipal('ec2.amazonaws.com')],
-        actions: ['sts:AssumeRole'],
-      },
-      managedPolicyArns: [
-        'arn:aws:iam::aws:policy/AmazonECS_FullAccess',
-        'arn:aws:iam::aws:policy/AmazonEC2FullAccess',
-      ],
-      instanceProfile: {
+  protected createResourceList(): ResourceInfo[] {
+    return [
+      {
         originName: 'for-ecs',
-        assign: (role, cfnIp) => ((role.forEcsInstanceProfile as CfnInstanceProfile) = cfnIp),
+        policyStatementProps: {
+          effect: Effect.ALLOW,
+          principals: [new ServicePrincipal('ec2.amazonaws.com')],
+          actions: ['sts:AssumeRole'],
+        },
+        managedPolicyArns: [
+          'arn:aws:iam::aws:policy/AmazonECS_FullAccess',
+          'arn:aws:iam::aws:policy/AmazonEC2FullAccess',
+        ],
+        instanceProfile: {
+          originName: 'for-ecs',
+          assign: (role, cfnIp) => ((role.forEcsInstanceProfile as CfnInstanceProfile) = cfnIp),
+        },
+        assign: (role, iamRole) => ((role.forEcs as CfnRole) = iamRole),
       },
-      assign: (role, iamRole) => ((role.forEcs as CfnRole) = iamRole),
-    },
-    {
-      originName: 'for-ecs-code-deploy',
-      policyStatementProps: {
-        effect: Effect.ALLOW,
-        principals: [new ServicePrincipal('codedeploy.amazonaws.com')],
-        actions: ['sts:AssumeRole'],
+      {
+        originName: 'for-ecs-code-deploy',
+        policyStatementProps: {
+          effect: Effect.ALLOW,
+          principals: [new ServicePrincipal('codedeploy.amazonaws.com')],
+          actions: ['sts:AssumeRole'],
+        },
+        managedPolicyArns: ['arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS'],
+        assign: (role, iamRole) => ((role.forEcsCodeDeploy as CfnRole) = iamRole),
       },
-      managedPolicyArns: ['arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS'],
-      assign: (role, iamRole) => ((role.forEcsCodeDeploy as CfnRole) = iamRole),
-    },
-  ];
+    ];
+  }
 
   constructor(parentProps: BaseProps) {
     super(parentProps);
 
-    for (const resourceInfo of this.resourceList) {
+    for (const resourceInfo of this.createResourceList()) {
       resourceInfo.assign(this, this.createIamRole(resourceInfo));
     }
   }

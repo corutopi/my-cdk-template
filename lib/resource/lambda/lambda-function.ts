@@ -42,7 +42,7 @@ export class LambdaFunction extends BaseResource {
 
   private readonly iamRole: IamRole;
 
-  private createResourceList(): ResourceInfo[] {
+  protected createResourceList(): ResourceInfo[] {
     return [
       {
         code: {

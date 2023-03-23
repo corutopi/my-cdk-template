@@ -1,3 +1,4 @@
+import { Construct } from 'constructs';
 import { CfnInternetGateway, CfnVPCGatewayAttachment } from 'aws-cdk-lib/aws-ec2';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
@@ -11,6 +12,12 @@ interface InternetGatewayProps {
   readonly vpc: Vpc;
 }
 
+interface ResourceInfo {
+  originName: string;
+  vpcId: string;
+  assign: (c: Construct) => void;
+}
+
 /**
  * InternetGateway を生成するリソースクラス
  */
@@ -21,17 +28,36 @@ export class InternetGateway extends BaseResource {
   public readonly main: CfnInternetGateway;
 
   private readonly vpc: Vpc;
+  protected createResourceList(): ResourceInfo[] {
+    return [
+      {
+        originName: 'main',
+        vpcId: this.vpc.main.ref,
+        assign: (c) => ((this.main as CfnInternetGateway) = c as CfnInternetGateway),
+      },
+    ];
+  }
+
   constructor(parentProps: BaseProps, internetGatewayProps: InternetGatewayProps) {
     super(parentProps);
 
     this.vpc = internetGatewayProps.vpc;
 
-    this.main = new CfnInternetGateway(this.scope, this.createLogicalId('main'), {
-      tags: [this.createNameTagProps('main')],
+    for (const ri of this.createResourceList()) {
+      ri.assign(this.createInternetGateway(ri));
+    }
+  }
+
+  private createInternetGateway(ri: ResourceInfo): CfnInternetGateway {
+    const ig = new CfnInternetGateway(this.scope, this.createLogicalId(ri.originName), {
+      tags: [this.createNameTagProps(ri.originName)],
     });
-    new CfnVPCGatewayAttachment(this.scope, this.createLogicalId('main-attachment'), {
-      vpcId: this.vpc.main.ref,
-      internetGatewayId: this.main.ref,
+
+    new CfnVPCGatewayAttachment(this.scope, this.createLogicalId(`${ri.originName}-attachment`), {
+      vpcId: ri.vpcId,
+      internetGatewayId: ig.ref,
     });
+
+    return ig;
   }
 }

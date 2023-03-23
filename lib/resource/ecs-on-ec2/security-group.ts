@@ -12,7 +12,7 @@ interface InboundRuleInfo {
   originName: string;
   ipProtocol: string;
   cidrIp?: string;
-  sourceSecurityGroupId?: (sg: SecurityGroup) => string;
+  sourceSecurityGroupId?: string;
   fromPort: number;
   toPort: number;
   description: string;
@@ -21,7 +21,7 @@ interface InboundRuleInfo {
 interface ResourceInfo {
   originName: string;
   description: string;
-  vpcId: (sg: SecurityGroup) => string;
+  vpcId: string;
   inboundRules?: InboundRuleInfo[];
   assign: (sg: SecurityGroup, cfnSg: CfnSecurityGroup) => void;
 }
@@ -38,71 +38,74 @@ export class SecurityGroup extends BaseResource {
   public readonly ecs: CfnSecurityGroup;
 
   private readonly vpc: Vpc;
-  private readonly resourceList: ResourceInfo[] = [
-    {
-      originName: 'ssh',
-      description: 'allow ssh access.',
-      vpcId: (sg) => sg.vpc.main.ref,
-      inboundRules: [
-        {
-          originName: 'all-ip',
-          ipProtocol: 'tcp',
-          cidrIp: '0.0.0.0/0',
-          fromPort: 22,
-          toPort: 22,
-          description: '(all)',
-        },
-      ],
-      assign: (sg, cfnSg) => ((sg.ssh as CfnSecurityGroup) = cfnSg),
-    },
-    {
-      originName: 'alb',
-      description: 'for alb.',
-      vpcId: (sg) => sg.vpc.main.ref,
-      inboundRules: [
-        {
-          originName: 'http',
-          ipProtocol: 'tcp',
-          cidrIp: '0.0.0.0/0',
-          fromPort: 80,
-          toPort: 80,
-          description: 'allow http',
-        },
-        {
-          originName: 'for-blue-green-http',
-          ipProtocol: 'tcp',
-          cidrIp: '0.0.0.0/0',
-          fromPort: 8080,
-          toPort: 8080,
-          description: 'allow http (blue-green)',
-        },
-      ],
-      assign: (sg, cfnSg) => ((sg.alb as CfnSecurityGroup) = cfnSg),
-    },
-    {
-      originName: 'ecs',
-      description: 'for ecs server.',
-      vpcId: (sg) => sg.vpc.main.ref,
-      inboundRules: [
-        {
-          originName: 'http',
-          ipProtocol: 'tcp',
-          cidrIp: '10.10.0.0/16',
-          fromPort: 49153,
-          toPort: 65535,
-          description: 'allow ephemeral port',
-        },
-      ],
-      assign: (sg, cfnSg) => ((sg.ecs as CfnSecurityGroup) = cfnSg),
-    },
-  ];
+
+  protected createResourceList(): ResourceInfo[] {
+    return [
+      {
+        originName: 'ssh',
+        description: 'allow ssh access.',
+        vpcId: this.vpc.main.ref,
+        inboundRules: [
+          {
+            originName: 'all-ip',
+            ipProtocol: 'tcp',
+            cidrIp: '0.0.0.0/0',
+            fromPort: 22,
+            toPort: 22,
+            description: '(all)',
+          },
+        ],
+        assign: (sg, cfnSg) => ((sg.ssh as CfnSecurityGroup) = cfnSg),
+      },
+      {
+        originName: 'alb',
+        description: 'for alb.',
+        vpcId: this.vpc.main.ref,
+        inboundRules: [
+          {
+            originName: 'http',
+            ipProtocol: 'tcp',
+            cidrIp: '0.0.0.0/0',
+            fromPort: 80,
+            toPort: 80,
+            description: 'allow http',
+          },
+          {
+            originName: 'for-blue-green-http',
+            ipProtocol: 'tcp',
+            cidrIp: '0.0.0.0/0',
+            fromPort: 8080,
+            toPort: 8080,
+            description: 'allow http (blue-green)',
+          },
+        ],
+        assign: (sg, cfnSg) => ((sg.alb as CfnSecurityGroup) = cfnSg),
+      },
+      {
+        originName: 'ecs',
+        description: 'for ecs server.',
+        vpcId: this.vpc.main.ref,
+        inboundRules: [
+          {
+            originName: 'http',
+            ipProtocol: 'tcp',
+            cidrIp: '10.10.0.0/16',
+            fromPort: 49153,
+            toPort: 65535,
+            description: 'allow ephemeral port',
+          },
+        ],
+        assign: (sg, cfnSg) => ((sg.ecs as CfnSecurityGroup) = cfnSg),
+      },
+    ];
+  }
 
   constructor(parentProps: BaseProps, props: ResourceProps) {
     super(parentProps);
 
     this.vpc = props.vpc;
 
-    for (const ri of this.resourceList) {
+    for (const ri of this.createResourceList()) {
       ri.assign(this, this.createSecurityGroup(ri));
     }
   }
@@ -117,7 +120,7 @@ export class SecurityGroup extends BaseResource {
     const sg = new CfnSecurityGroup(this.scope, this.createLogicalId(ri.originName), {
       groupDescription: ri.description,
       groupName: this.createResourceName(ri.originName),
-      vpcId: ri.vpcId(this),
+      vpcId: ri.vpcId,
       tags: [this.createNameTagProps(ri.originName)],
     });
 
@@ -149,9 +152,7 @@ export class SecurityGroup extends BaseResource {
         fromPort: iri.fromPort,
         toPort: iri.toPort,
         groupId: sg.attrGroupId,
-        sourceSecurityGroupId: iri.sourceSecurityGroupId
-          ? iri.sourceSecurityGroupId(this)
-          : undefined,
+        sourceSecurityGroupId: iri.sourceSecurityGroupId ? iri.sourceSecurityGroupId : undefined,
       }
     );
   }

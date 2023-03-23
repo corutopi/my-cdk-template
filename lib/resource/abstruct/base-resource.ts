@@ -21,6 +21,8 @@ export abstract class BaseResource {
   protected readonly stage: string;
   protected readonly context: constant.ContextProperty;
 
+  protected abstract createResourceList(): any;
+
   constructor(baseProps: BaseProps) {
     this.scope = baseProps.scope;
     this.stage = this.scope.node.tryGetContext('stage');
