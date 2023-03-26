@@ -1,3 +1,4 @@
+import { CfnResource } from 'aws-cdk-lib/core';
 import { CfnService } from 'aws-cdk-lib/aws-ecs';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
@@ -14,6 +15,12 @@ interface ResourceProps {
 
 interface ResourceInfo {
   readonly originName: string;
+  readonly cluster: string;
+  readonly desiredCount: number;
+  readonly loadBalancers: CfnService.LoadBalancerProperty[];
+  readonly deploymentController: CfnService.DeploymentControllerProperty;
+  readonly taskDefinition: string;
+  readonly dependOns?: CfnResource[];
   readonly assign: (service: EcsService, cfnService: CfnService) => void;
 }
 
@@ -34,6 +41,18 @@ export class EcsService extends BaseResource {
     return [
       {
         originName: 'test',
+        cluster: this.cluster.test.attrArn,
+        desiredCount: 1,
+        loadBalancers: [
+          {
+            containerPort: 80,
+            targetGroupArn: this.tg.test1.ref,
+            containerName: 'httpd-test',
+          },
+        ],
+        deploymentController: { type: 'CODE_DEPLOY' },
+        taskDefinition: 'cdktest-dev-test-task:6',
+        dependOns: [this.alb.test, this.alb.testListener80, this.alb.testListener8080],
         assign: (service, cfnService) => ((service.test as CfnService) = cfnService),
       },
     ];
@@ -53,25 +72,17 @@ export class EcsService extends BaseResource {
 
   private createEcsService(ri: ResourceInfo): CfnService {
     const service = new CfnService(this.scope, this.createLogicalId(ri.originName), {
-      serviceName: 'test-service-2',
-      cluster: this.cluster.test.attrArn,
-      desiredCount: 1,
-      loadBalancers: [
-        {
-          containerPort: 80,
-          targetGroupArn: this.tg.test1.ref,
-          containerName: 'httpd-test',
-        },
-      ],
-      deploymentController: {
-        type: 'CODE_DEPLOY',
-      },
-      taskDefinition: 'cdktest-dev-test-task:6',
+      serviceName: this.createResourceName(ri.originName),
+      cluster: ri.cluster,
+      desiredCount: ri.desiredCount,
+      loadBalancers: ri.loadBalancers,
+      deploymentController: ri.deploymentController,
+      taskDefinition: ri.taskDefinition,
     });
 
-    service.addDependsOn(this.alb.test);
-    service.addDependsOn(this.alb.testListener80);
-    service.addDependsOn(this.alb.testListener8080);
+    if (ri.dependOns) {
+      for (const d of ri.dependOns) service.addDependsOn(d);
+    }
 
     return service;
   }

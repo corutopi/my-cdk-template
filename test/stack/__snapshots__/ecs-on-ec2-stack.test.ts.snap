@@ -337,7 +337,7 @@ Object {
             },
           },
         ],
-        "ServiceName": "test-service-2",
+        "ServiceName": "cdktest-dev-test-service",
         "TaskDefinition": "cdktest-dev-test-task:6",
       },
       "Type": "AWS::ECS::Service",
