@@ -1,12 +1,4 @@
-import {
-  CfnRole,
-  CfnInstanceProfile,
-  PolicyStatement,
-  PolicyStatementProps,
-  ServicePrincipal,
-  PolicyDocument,
-  Effect,
-} from 'aws-cdk-lib/aws-iam';
+import { CfnRole, CfnInstanceProfile } from 'aws-cdk-lib/aws-iam';
 import * as cons from '../../constant';
 
 import { BaseResource, BaseProps } from '../abstruct/base-resource';
@@ -15,20 +7,32 @@ import { BaseResource, BaseProps } from '../abstruct/base-resource';
  * InstanceProfile 生成に必要な情報を持つインターフェース
  */
 interface InstanceProfileInfo {
-  originName: string;
-  assign: (role: IamRole, cfnIp: CfnInstanceProfile) => void;
+  readonly originName: string;
+  readonly assign: (role: IamRole, cfnIp: CfnInstanceProfile) => void;
+}
+
+/**
+ * IamRole の信頼関係に指定するJSON情報を持つインターフェース
+ */
+interface TrustRelationshipPolicyDocumentJSON {
+  readonly Version: '2012-10-17';
+  readonly Statement: {
+    readonly Effect: 'Allow' | 'Deny';
+    readonly Principal: { [key: string]: string };
+    readonly Action: 'sts:AssumeRole';
+  }[];
 }
 
 /**
  * IamRole 生成に必要な情報を持つインターフェース
  */
 interface ResourceInfo {
-  originName: string;
-  policyStatementProps: PolicyStatementProps;
-  managedPolicyArns: string[];
-  policies?: CfnRole.PolicyProperty[];
-  instanceProfile?: InstanceProfileInfo;
-  assign: (role: IamRole, iamRole: CfnRole) => void;
+  readonly originName: string;
+  readonly assumeRolePolicyDocument: TrustRelationshipPolicyDocumentJSON;
+  readonly managedPolicyArns: string[];
+  readonly policies?: CfnRole.PolicyProperty[];
+  readonly instanceProfile?: InstanceProfileInfo;
+  readonly assign: (role: IamRole, iamRole: CfnRole) => void;
 }
 
 /**
@@ -46,10 +50,15 @@ export class IamRole extends BaseResource {
     return [
       {
         originName: 'for-ecs',
-        policyStatementProps: {
-          effect: Effect.ALLOW,
-          principals: [new ServicePrincipal('ec2.amazonaws.com')],
-          actions: ['sts:AssumeRole'],
+        assumeRolePolicyDocument: {
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Effect: 'Allow',
+              Principal: { Service: 'ec2.amazonaws.com' },
+              Action: 'sts:AssumeRole',
+            },
+          ],
         },
         managedPolicyArns: [
           'arn:aws:iam::aws:policy/AmazonECS_FullAccess',
@@ -63,10 +72,15 @@ export class IamRole extends BaseResource {
       },
       {
         originName: 'for-ecs-code-deploy',
-        policyStatementProps: {
-          effect: Effect.ALLOW,
-          principals: [new ServicePrincipal('codedeploy.amazonaws.com')],
-          actions: ['sts:AssumeRole'],
+        assumeRolePolicyDocument: {
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Effect: 'Allow',
+              Principal: { Service: 'codedeploy.amazonaws.com' },
+              Action: 'sts:AssumeRole',
+            },
+          ],
         },
         managedPolicyArns: ['arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS'],
         assign: (role, iamRole) => ((role.forEcsCodeDeploy as CfnRole) = iamRole),
@@ -91,9 +105,7 @@ export class IamRole extends BaseResource {
   private createIamRole(ri: ResourceInfo): CfnRole {
     const role = new CfnRole(this.scope, this.createLogicalId(ri.originName), {
       roleName: this.createResourceName(ri.originName),
-      assumeRolePolicyDocument: new PolicyDocument({
-        statements: [new PolicyStatement(ri.policyStatementProps)],
-      }),
+      assumeRolePolicyDocument: ri.assumeRolePolicyDocument,
       managedPolicyArns: ri.managedPolicyArns,
       policies: ri.policies,
     });
