@@ -20,6 +20,15 @@ interface ResourceProps {
 
 interface ResourceInfo {
   readonly originName: string;
+  readonly applicationName: string;
+  readonly deploymentConfigName: 'CodeDeployDefault.ECSAllAtOnce';
+  readonly autoRollbackConfiguration: CfnDeploymentGroup.AutoRollbackConfigurationProperty;
+  readonly deploymentStyle: CfnDeploymentGroup.DeploymentStyleProperty;
+  readonly outdatedInstancesStrategy: 'UPDATE';
+  readonly blueGreenDeploymentConfiguration: CfnDeploymentGroup.BlueGreenDeploymentConfigurationProperty;
+  readonly serviceRoleArn: string;
+  readonly ecsServices: CfnDeploymentGroup.ECSServiceProperty[];
+  readonly loadBalancerInfo: CfnDeploymentGroup.LoadBalancerInfoProperty;
   readonly assign: (cddg: CodeDeployDeploymentGroup, cfnDg: CfnDeploymentGroup) => void;
 }
 
@@ -43,6 +52,40 @@ export class CodeDeployDeploymentGroup extends BaseResource {
     return [
       {
         originName: 'test',
+        applicationName: this.codeDeployApplication.test.applicationName as string,
+        deploymentConfigName: 'CodeDeployDefault.ECSAllAtOnce',
+        autoRollbackConfiguration: {
+          enabled: true,
+          events: ['DEPLOYMENT_FAILURE', 'DEPLOYMENT_STOP_ON_REQUEST'],
+        },
+        deploymentStyle: { deploymentType: 'BLUE_GREEN', deploymentOption: 'WITH_TRAFFIC_CONTROL' },
+        outdatedInstancesStrategy: 'UPDATE',
+        blueGreenDeploymentConfiguration: {
+          deploymentReadyOption: { actionOnTimeout: 'STOP_DEPLOYMENT', waitTimeInMinutes: 60 },
+          terminateBlueInstancesOnDeploymentSuccess: {
+            action: 'TERMINATE',
+            terminationWaitTimeInMinutes: 60,
+          },
+        },
+        serviceRoleArn: this.iamRole.forEcsCodeDeploy.attrArn,
+        ecsServices: [
+          {
+            clusterName: this.ecsCluster.test.clusterName as string,
+            serviceName: this.ecsService.test.attrName,
+          },
+        ],
+        loadBalancerInfo: {
+          targetGroupPairInfoList: [
+            {
+              prodTrafficRoute: { listenerArns: [this.alb.testListener80.attrListenerArn] },
+              targetGroups: [
+                { name: this.tg.test1.attrTargetGroupName },
+                { name: this.tg.test2.attrTargetGroupName },
+              ],
+              testTrafficRoute: { listenerArns: [this.alb.testListener8080.attrListenerArn] },
+            },
+          ],
+        },
         assign: (cddg, cfnDg) => ((cddg.test as CfnDeploymentGroup) = cfnDg),
       },
     ];
@@ -66,46 +109,15 @@ export class CodeDeployDeploymentGroup extends BaseResource {
   private createDeploymentGroup(ri: ResourceInfo): CfnDeploymentGroup {
     return new CfnDeploymentGroup(this.scope, this.createLogicalId(ri.originName), {
       deploymentGroupName: this.createResourceName(ri.originName),
-      applicationName: this.codeDeployApplication.test.applicationName as string,
-      deploymentConfigName: 'CodeDeployDefault.ECSAllAtOnce',
-      autoRollbackConfiguration: {
-        enabled: true,
-        events: ['DEPLOYMENT_FAILURE', 'DEPLOYMENT_STOP_ON_REQUEST'],
-      },
-      deploymentStyle: {
-        deploymentType: 'BLUE_GREEN',
-        deploymentOption: 'WITH_TRAFFIC_CONTROL',
-      },
-      outdatedInstancesStrategy: 'UPDATE',
-      blueGreenDeploymentConfiguration: {
-        deploymentReadyOption: {
-          actionOnTimeout: 'STOP_DEPLOYMENT',
-          waitTimeInMinutes: 60,
-        },
-        terminateBlueInstancesOnDeploymentSuccess: {
-          action: 'TERMINATE',
-          terminationWaitTimeInMinutes: 60,
-        },
-      },
-      serviceRoleArn: this.iamRole.forEcsCodeDeploy.attrArn,
-      ecsServices: [
-        {
-          clusterName: this.ecsCluster.test.clusterName as string,
-          serviceName: this.ecsService.test.attrName,
-        },
-      ],
-      loadBalancerInfo: {
-        targetGroupPairInfoList: [
-          {
-            prodTrafficRoute: { listenerArns: [this.alb.testListener80.attrListenerArn] },
-            targetGroups: [
-              { name: this.tg.test1.attrTargetGroupName },
-              { name: this.tg.test2.attrTargetGroupName },
-            ],
-            testTrafficRoute: { listenerArns: [this.alb.testListener8080.attrListenerArn] },
-          },
-        ],
-      },
+      applicationName: ri.applicationName,
+      deploymentConfigName: ri.deploymentConfigName,
+      autoRollbackConfiguration: ri.autoRollbackConfiguration,
+      deploymentStyle: ri.deploymentStyle,
+      outdatedInstancesStrategy: ri.outdatedInstancesStrategy,
+      blueGreenDeploymentConfiguration: ri.blueGreenDeploymentConfiguration,
+      serviceRoleArn: ri.serviceRoleArn,
+      ecsServices: ri.ecsServices,
+      loadBalancerInfo: ri.loadBalancerInfo,
     });
   }
 }
