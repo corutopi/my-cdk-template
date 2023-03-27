@@ -243,6 +243,16 @@ Object {
             },
           },
         ],
+        "PlacementStrategies": Array [
+          Object {
+            "Field": "instanceId",
+            "Type": "spread",
+          },
+          Object {
+            "Field": "attribute:ecs.availability-zone",
+            "Type": "spread",
+          },
+        ],
         "ServiceName": "cdktest-dev-test-service",
         "TaskDefinition": "cdktest-dev-test-task:6",
       },
