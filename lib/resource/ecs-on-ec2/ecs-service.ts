@@ -21,6 +21,7 @@ interface ResourceInfo {
   readonly deploymentController: CfnService.DeploymentControllerProperty;
   readonly taskDefinition: string;
   readonly dependOns?: CfnResource[];
+  readonly placementStrategies?: CfnService.PlacementStrategyProperty[];
   readonly assign: (service: EcsService, cfnService: CfnService) => void;
 }
 
@@ -52,6 +53,10 @@ export class EcsService extends BaseResource {
         ],
         deploymentController: { type: 'CODE_DEPLOY' },
         taskDefinition: 'cdktest-dev-test-task:6',
+        placementStrategies: [
+          { type: 'spread', field: 'instanceId' },
+          { type: 'spread', field: 'attribute:ecs.availability-zone' },
+        ],
         dependOns: [this.alb.test, this.alb.testListener80, this.alb.testListener8080],
         assign: (service, cfnService) => ((service.test as CfnService) = cfnService),
       },
@@ -78,6 +83,7 @@ export class EcsService extends BaseResource {
       loadBalancers: ri.loadBalancers,
       deploymentController: ri.deploymentController,
       taskDefinition: ri.taskDefinition,
+      placementStrategies: ri.placementStrategies,
     });
 
     if (ri.dependOns) {
