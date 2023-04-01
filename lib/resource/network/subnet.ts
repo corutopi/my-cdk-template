@@ -1,6 +1,6 @@
 import { CfnSubnet } from 'aws-cdk-lib/aws-ec2';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 import { Vpc } from './vpc';
 import * as cons from '../../constant';
 
@@ -14,8 +14,7 @@ interface SubnetProps {
 /**
  * Subnet 生成に必要な情報を持つインターフェース
  */
-interface ResourceInfo {
-  originName: string;
+interface ResourceInfo extends BaseInfo {
   cidrBlock: string;
   availabilityZone: string;
   mapPublicIpOnLaunch: boolean;

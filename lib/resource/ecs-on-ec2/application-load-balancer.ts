@@ -1,6 +1,6 @@
 import { CfnLoadBalancer, CfnListener } from 'aws-cdk-lib/aws-elasticloadbalancingv2';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 import { SecurityGroup } from './security-group';
 import { TargetGroup } from './target-group';
 import { Subnet } from '../network/subnet';
@@ -12,8 +12,7 @@ interface ResourceProps {
   readonly tg: TargetGroup;
 }
 
-interface ListenerInfo {
-  readonly originName: string;
+interface ListenerInfo extends BaseInfo {
   readonly defaultActions: {
     readonly type: 'forward';
     readonly targetGroupArn: string;
@@ -23,8 +22,7 @@ interface ListenerInfo {
   readonly assign: (lb: ApplicationLoadBalancer, cfnListener: CfnListener) => void;
 }
 
-interface ResourceInfo {
-  readonly originName: string;
+interface ResourceInfo extends BaseInfo {
   readonly subnets: string[];
   readonly securityGroups: string[];
   readonly listeners: ListenerInfo[];

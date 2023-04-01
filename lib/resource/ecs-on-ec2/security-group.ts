@@ -1,6 +1,6 @@
 import { CfnSecurityGroup, CfnSecurityGroupIngress } from 'aws-cdk-lib/aws-ec2';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 import { Vpc } from '../network/vpc';
 import * as cons from '../../constant';
 
@@ -9,21 +9,20 @@ interface ResourceProps {
 }
 
 interface InboundRuleInfo {
-  originName: string;
-  ipProtocol: string;
-  cidrIp?: string;
-  sourceSecurityGroupId?: string;
-  fromPort: number;
-  toPort: number;
-  description: string;
+  readonly originName: string;
+  readonly ipProtocol: string;
+  readonly cidrIp?: string;
+  readonly sourceSecurityGroupId?: string;
+  readonly fromPort: number;
+  readonly toPort: number;
+  readonly description: string;
 }
 
-interface ResourceInfo {
-  originName: string;
-  description: string;
-  vpcId: string;
-  inboundRules?: InboundRuleInfo[];
-  assign: (sg: SecurityGroup, cfnSg: CfnSecurityGroup) => void;
+interface ResourceInfo extends BaseInfo {
+  readonly description: string;
+  readonly vpcId: string;
+  readonly inboundRules?: InboundRuleInfo[];
+  readonly assign: (sg: SecurityGroup, cfnSg: CfnSecurityGroup) => void;
 }
 
 /**

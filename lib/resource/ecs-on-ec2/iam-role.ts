@@ -1,13 +1,12 @@
 import { CfnRole, CfnInstanceProfile } from 'aws-cdk-lib/aws-iam';
 import * as cons from '../../constant';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 
 /**
  * InstanceProfile 生成に必要な情報を持つインターフェース
  */
-interface InstanceProfileInfo {
-  readonly originName: string;
+interface InstanceProfileInfo extends BaseInfo {
   readonly assign: (role: IamRole, cfnIp: CfnInstanceProfile) => void;
 }
 
@@ -26,8 +25,7 @@ interface TrustRelationshipPolicyDocumentJSON {
 /**
  * IamRole 生成に必要な情報を持つインターフェース
  */
-interface ResourceInfo {
-  readonly originName: string;
+interface ResourceInfo extends BaseInfo {
   readonly assumeRolePolicyDocument: TrustRelationshipPolicyDocumentJSON;
   readonly managedPolicyArns: string[];
   readonly policies?: CfnRole.PolicyProperty[];

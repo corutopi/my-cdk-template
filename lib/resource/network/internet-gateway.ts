@@ -1,7 +1,7 @@
 import { Construct } from 'constructs';
 import { CfnInternetGateway, CfnVPCGatewayAttachment } from 'aws-cdk-lib/aws-ec2';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 import { Vpc } from './vpc';
 import * as cons from '../../constant';
 
@@ -12,8 +12,7 @@ interface InternetGatewayProps {
   readonly vpc: Vpc;
 }
 
-interface ResourceInfo {
-  originName: string;
+interface ResourceInfo extends BaseInfo {
   vpcId: string;
   assign: (c: Construct) => void;
 }

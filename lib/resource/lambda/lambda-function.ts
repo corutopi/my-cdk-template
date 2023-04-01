@@ -2,7 +2,7 @@ import { CfnFunction, CfnAlias, CfnVersion } from 'aws-cdk-lib/aws-lambda';
 import * as cdk from 'aws-cdk-lib';
 import * as crypto from 'crypto';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 import { IamRole } from './iam-role';
 import * as cons from '../../constant';
 
@@ -20,10 +20,9 @@ interface AliasInfo {
   version: string;
 }
 
-interface ResourceInfo {
+interface ResourceInfo extends BaseInfo {
   code: CodeInfo;
   role: string;
-  originName: string;
   handler: string;
   runtime: string;
   aliases: AliasInfo[];

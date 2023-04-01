@@ -1,7 +1,7 @@
 import { CfnResource } from 'aws-cdk-lib/core';
 import { CfnService } from 'aws-cdk-lib/aws-ecs';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 import { TargetGroup } from './target-group';
 import { EcsCluster } from './ecs-cluster';
 import { ApplicationLoadBalancer } from './application-load-balancer';
@@ -13,8 +13,7 @@ interface ResourceProps {
   readonly cluster: EcsCluster;
 }
 
-interface ResourceInfo {
-  readonly originName: string;
+interface ResourceInfo extends BaseInfo {
   readonly cluster: string;
   readonly desiredCount: number;
   readonly loadBalancers: CfnService.LoadBalancerProperty[];

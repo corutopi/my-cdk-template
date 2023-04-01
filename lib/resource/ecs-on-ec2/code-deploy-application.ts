@@ -1,10 +1,9 @@
 import { CfnApplication } from 'aws-cdk-lib/aws-codedeploy';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 import * as cons from '../../constant';
 
-interface ResourceInfo {
-  readonly originName: string;
+interface ResourceInfo extends BaseInfo {
   readonly assign: (cda: CodeDeployApplication, cfnApp: CfnApplication) => void;
 }
 

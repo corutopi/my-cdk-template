@@ -1,6 +1,6 @@
 import { CfnRouteTable, CfnRoute, CfnSubnetRouteTableAssociation } from 'aws-cdk-lib/aws-ec2';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 import { Vpc } from './vpc';
 import { Subnet } from './subnet';
 import { InternetGateway } from './internet-gateway';
@@ -35,7 +35,7 @@ interface SubnetRouteTableAssociationInfo {
 /**
  * RouteTable 生成に必要な情報を持つインターフェース
  */
-interface ResourceInfo {
+interface ResourceInfo extends BaseInfo {
   originName: string;
   associationList: SubnetRouteTableAssociationInfo[];
   routeList: RouteInfo[];

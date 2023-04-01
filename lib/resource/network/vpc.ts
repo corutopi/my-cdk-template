@@ -1,11 +1,10 @@
 import { Construct } from 'constructs';
 import { CfnVPC } from 'aws-cdk-lib/aws-ec2';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 import * as cons from '../../constant';
 
-interface ResourceInfo {
-  originName: string;
+interface ResourceInfo extends BaseInfo {
   ciderBlock: string;
   assign: (c: Construct) => void;
 }

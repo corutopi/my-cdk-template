@@ -9,13 +9,12 @@ import {
 } from 'aws-cdk-lib/aws-iam';
 import * as cons from '../../constant';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 
 /**
  * IamRole 生成に必要な情報を持つインターフェース
  */
-interface ResourceInfo {
-  originName: string;
+interface ResourceInfo extends BaseInfo {
   policyStatementProps: PolicyStatementProps;
   managedPolicyArns: string[];
   assign: (iamRole: CfnRole) => void;

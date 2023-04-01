@@ -1,11 +1,10 @@
 import * as cdk from 'aws-cdk-lib';
 import { CfnTaskDefinition } from 'aws-cdk-lib/aws-ecs';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 import * as cons from '../../constant';
 
-interface ResourceInfo {
-  readonly originName: string;
+interface ResourceInfo extends BaseInfo {
   readonly containerDefinitions: CfnTaskDefinition.ContainerDefinitionProperty[];
   readonly assign: (task: TaskDefinition, cfnTask: CfnTaskDefinition) => void;
 }

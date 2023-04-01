@@ -10,6 +10,11 @@ export interface BaseProps {
   readonly scope: Construct;
 }
 
+export interface BaseInfo {
+  readonly originName: string;
+  readonly assign: (br: any, cr: any) => void;
+}
+
 /**
  * リソースクラスで継承する抽象クラス.
  */
@@ -21,7 +26,7 @@ export abstract class BaseResource {
   protected readonly stage: string;
   protected readonly context: constant.ContextProperty;
 
-  protected abstract createResourceList(): any;
+  protected abstract createResourceList(): BaseInfo[];
 
   constructor(baseProps: BaseProps) {
     this.scope = baseProps.scope;

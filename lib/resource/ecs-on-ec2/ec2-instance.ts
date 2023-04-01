@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { CfnResource } from 'aws-cdk-lib/core';
 import { CfnInstance } from 'aws-cdk-lib/aws-ec2';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 import { IamRole } from './iam-role';
 import { SecurityGroup } from './security-group';
 import { EcsCluster } from './ecs-cluster';
@@ -17,8 +17,7 @@ interface ResourceProps {
   readonly cluster: EcsCluster;
 }
 
-interface ResourceInfo {
-  readonly originName: string;
+interface ResourceInfo extends BaseInfo {
   readonly imageId: string;
   readonly keyName: string;
   readonly iamInstanceProfile: string;

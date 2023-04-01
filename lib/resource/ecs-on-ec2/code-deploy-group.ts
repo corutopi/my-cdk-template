@@ -1,6 +1,6 @@
 import { CfnDeploymentGroup } from 'aws-cdk-lib/aws-codedeploy';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 import { CodeDeployApplication } from './code-deploy-application';
 import { IamRole } from './iam-role';
 import { EcsCluster } from './ecs-cluster';
@@ -10,16 +10,15 @@ import { TargetGroup } from './target-group';
 import * as cons from '../../constant';
 
 interface ResourceProps {
-  codeDeployApplication: CodeDeployApplication;
-  iamRole: IamRole;
-  ecsCluster: EcsCluster;
-  ecsService: EcsService;
-  alb: ApplicationLoadBalancer;
-  tg: TargetGroup;
+  readonly codeDeployApplication: CodeDeployApplication;
+  readonly iamRole: IamRole;
+  readonly ecsCluster: EcsCluster;
+  readonly ecsService: EcsService;
+  readonly alb: ApplicationLoadBalancer;
+  readonly tg: TargetGroup;
 }
 
-interface ResourceInfo {
-  readonly originName: string;
+interface ResourceInfo extends BaseInfo {
   readonly applicationName: string;
   readonly deploymentConfigName: 'CodeDeployDefault.ECSAllAtOnce';
   readonly autoRollbackConfiguration: CfnDeploymentGroup.AutoRollbackConfigurationProperty;

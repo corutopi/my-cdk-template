@@ -1,15 +1,14 @@
 import { CfnLogGroup } from 'aws-cdk-lib/aws-logs';
 import * as cons from '../../constant';
 
-import { BaseResource, BaseProps } from '../abstruct/base-resource';
+import { BaseResource, BaseProps, BaseInfo } from '../abstruct/base-resource';
 import { LambdaFunction } from './lambda-function';
 
 interface LogsProps {
   lambdaFunction: LambdaFunction;
 }
 
-interface ResourceInfo {
-  originName: string;
+interface ResourceInfo extends BaseInfo {
   functionName: string;
   retentionInDays: number;
   assign: (cfnLogGroup: CfnLogGroup) => void;
